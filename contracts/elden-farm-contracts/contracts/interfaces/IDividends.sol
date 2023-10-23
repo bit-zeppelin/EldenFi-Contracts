@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity =0.7.6;
 
-interface IDividendsV2 {
+interface IDividends {
   function distributedTokensLength() external view returns (uint256);
 
   function distributedToken(uint256 index) external view returns (address);

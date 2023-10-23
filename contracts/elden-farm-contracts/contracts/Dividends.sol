@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/utils/EnumerableSet.sol";
 
-import "./interfaces/IDividendsV2.sol";
+import "./interfaces/IDividends.sol";
 import "./interfaces/ISEldenTokenUsage.sol";
 
 
@@ -25,7 +25,7 @@ import "./interfaces/ISEldenTokenUsage.sol";
  * This transfer from the pending slot to the distribution slot is based on cycleDividendsPercent and CYCLE_PERIOD_SECONDS
  *
  */
-contract DividendsV2 is Ownable, ReentrancyGuard, ISEldenTokenUsage, IDividendsV2 {
+contract Dividends is Ownable, ReentrancyGuard, ISEldenTokenUsage, IDividends {
   using SafeMath for uint256;
   using SafeERC20 for IERC20;
   using EnumerableSet for EnumerableSet.AddressSet;

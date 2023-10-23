@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity =0.7.6;
 
-interface INitroCustomReq {
+interface IRuneCustomReq {
     function canDepositDescription() external view returns (string calldata);
     function canHarvestDescription() external view returns (string calldata);
 

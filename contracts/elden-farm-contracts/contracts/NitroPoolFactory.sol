@@ -6,29 +6,29 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/EnumerableSet.sol";
 
-import "./NitroPool.sol";
-import "./interfaces/INitroPoolFactory.sol";
+import "./RunePool.sol";
+import "./interfaces/IRunePoolFactory.sol";
 import "./interfaces/tokens/IEldenToken.sol";
 import "./interfaces/tokens/ISEldenToken.sol";
 
 
-contract NitroPoolFactory is Ownable, INitroPoolFactory {
+contract RunePoolFactory is Ownable, IRunePoolFactory {
   using EnumerableSet for EnumerableSet.AddressSet;
 
   IEldenToken public eldenToken; // ELDENToken contract's address
   ISEldenToken public sEldenToken; // SEldenToken contract's address
 
-  EnumerableSet.AddressSet internal _nitroPools; // all nitro pools
-  EnumerableSet.AddressSet private _publishedNitroPools; // all published nitro pools
-  mapping(address => EnumerableSet.AddressSet) private _nftPoolPublishedNitroPools; // published nitro pools per NFTPool
-  mapping(address => EnumerableSet.AddressSet) internal _ownerNitroPools; // nitro pools per owner
+  EnumerableSet.AddressSet internal _runePools; // all rune pools
+  EnumerableSet.AddressSet private _publishedRunePools; // all published rune pools
+  mapping(address => EnumerableSet.AddressSet) private _nftPoolPublishedRunePools; // published rune pools per NFTPool
+  mapping(address => EnumerableSet.AddressSet) internal _ownerRunePools; // rune pools per owner
 
   uint256 public constant MAX_DEFAULT_FEE = 100; // (1%) max authorized default fee
-  uint256 public defaultFee; // default fee for nitro pools (*1e2)
+  uint256 public defaultFee; // default fee for rune pools (*1e2)
   address public override feeAddress; // to receive fees when defaultFee is set
-  EnumerableSet.AddressSet internal _exemptedAddresses; // owners or nitro addresses exempted from default fee
+  EnumerableSet.AddressSet internal _exemptedAddresses; // owners or rune addresses exempted from default fee
 
-  address public override emergencyRecoveryAddress; // to recover rewards from emergency closed nitro pools
+  address public override emergencyRecoveryAddress; // to recover rewards from emergency closed rune pools
 
 
   constructor(IEldenToken eldenToken_, ISEldenToken sEldenToken_, address emergencyRecoveryAddress_, address feeAddress_){
@@ -45,21 +45,21 @@ contract NitroPoolFactory is Ownable, INitroPoolFactory {
   /****************** EVENTS ******************/
   /********************************************/
 
-  event CreateNitroPool(address nitroAddress);
-  event PublishNitroPool(address nitroAddress);
+  event CreateRunePool(address runeAddress);
+  event PublishRunePool(address runeAddress);
   event SetDefaultFee(uint256 fee);
   event SetFeeAddress(address feeAddress);
   event SetEmergencyRecoveryAddress(address emergencyRecoveryAddress);
   event SetExemptedAddress(address exemptedAddress, bool isExempted);
-  event SetNitroPoolOwner(address previousOwner, address newOwner);
+  event SetRunePoolOwner(address previousOwner, address newOwner);
 
 
   /***********************************************/
   /****************** MODIFIERS ******************/
   /***********************************************/
 
-  modifier nitroPoolExists(address nitroPoolAddress) {
-    require(_nitroPools.contains(nitroPoolAddress), "unknown nitroPool");
+  modifier runePoolExists(address runePoolAddress) {
+    require(_runePools.contains(runePoolAddress), "unknown runePool");
     _;
   }
 
@@ -69,59 +69,59 @@ contract NitroPoolFactory is Ownable, INitroPoolFactory {
   /**************************************************/
 
   /**
-   * @dev Returns the number of nitroPools
+   * @dev Returns the number of runePools
    */
-  function nitroPoolsLength() external view returns (uint256) {
-    return _nitroPools.length();
+  function runePoolsLength() external view returns (uint256) {
+    return _runePools.length();
   }
 
   /**
-   * @dev Returns a nitroPool from its "index"
+   * @dev Returns a runePool from its "index"
    */
-  function getNitroPool(uint256 index) external view returns (address) {
-    return _nitroPools.at(index);
+  function getRunePool(uint256 index) external view returns (address) {
+    return _runePools.at(index);
   }
 
   /**
-   * @dev Returns the number of published nitroPools
+   * @dev Returns the number of published runePools
    */
-  function publishedNitroPoolsLength() external view returns (uint256) {
-    return _publishedNitroPools.length();
+  function publishedRunePoolsLength() external view returns (uint256) {
+    return _publishedRunePools.length();
   }
 
   /**
-   * @dev Returns a published nitroPool from its "index"
+   * @dev Returns a published runePool from its "index"
    */
-  function getPublishedNitroPool(uint256 index) external view returns (address) {
-    return _publishedNitroPools.at(index);
+  function getPublishedRunePool(uint256 index) external view returns (address) {
+    return _publishedRunePools.at(index);
   }
 
   /**
-   * @dev Returns the number of published nitroPools linked to "nftPoolAddress" NFTPool
+   * @dev Returns the number of published runePools linked to "nftPoolAddress" NFTPool
    */
-  function nftPoolPublishedNitroPoolsLength(address nftPoolAddress) external view returns (uint256) {
-    return _nftPoolPublishedNitroPools[nftPoolAddress].length();
+  function nftPoolPublishedRunePoolsLength(address nftPoolAddress) external view returns (uint256) {
+    return _nftPoolPublishedRunePools[nftPoolAddress].length();
   }
 
   /**
-   * @dev Returns a published nitroPool linked to "nftPoolAddress" from its "index"
+   * @dev Returns a published runePool linked to "nftPoolAddress" from its "index"
    */
-  function getNftPoolPublishedNitroPool(address nftPoolAddress, uint256 index) external view returns (address) {
-    return _nftPoolPublishedNitroPools[nftPoolAddress].at(index);
+  function getNftPoolPublishedRunePool(address nftPoolAddress, uint256 index) external view returns (address) {
+    return _nftPoolPublishedRunePools[nftPoolAddress].at(index);
   }
 
   /**
-   * @dev Returns the number of nitroPools owned by "userAddress"
+   * @dev Returns the number of runePools owned by "userAddress"
    */
-  function ownerNitroPoolsLength(address userAddress) external view returns (uint256) {
-    return _ownerNitroPools[userAddress].length();
+  function ownerRunePoolsLength(address userAddress) external view returns (uint256) {
+    return _ownerRunePools[userAddress].length();
   }
 
   /**
-   * @dev Returns a nitroPool owned by "userAddress" from its "index"
+   * @dev Returns a runePool owned by "userAddress" from its "index"
    */
-  function getOwnerNitroPool(address userAddress, uint256 index) external view returns (address) {
-    return _ownerNitroPools[userAddress].at(index);
+  function getOwnerRunePool(address userAddress, uint256 index) external view returns (address) {
+    return _ownerRunePools[userAddress].at(index);
   }
 
   /**
@@ -146,10 +146,10 @@ contract NitroPoolFactory is Ownable, INitroPoolFactory {
   }
 
   /**
-   * @dev Returns the fee for "nitroPoolAddress" address
+   * @dev Returns the fee for "runePoolAddress" address
    */
-  function getNitroPoolFee(address nitroPoolAddress, address ownerAddress) external view override returns (uint256) {
-    if(_exemptedAddresses.contains(nitroPoolAddress) || _exemptedAddresses.contains(ownerAddress)) {
+  function getRunePoolFee(address runePoolAddress, address ownerAddress) external view override returns (uint256) {
+    if(_exemptedAddresses.contains(runePoolAddress) || _exemptedAddresses.contains(ownerAddress)) {
       return 0;
     }
     return defaultFee;
@@ -161,54 +161,54 @@ contract NitroPoolFactory is Ownable, INitroPoolFactory {
   /*****************************************************************/
 
   /**
-   * @dev Deploys a new Nitro Pool
+   * @dev Deploys a new Rune Pool
    */
-  function createNitroPool(
-    address nftPoolAddress, IERC20 rewardsToken1, IERC20 rewardsToken2, NitroPool.Settings calldata settings
-  ) external virtual returns (address nitroPool) {
+  function createRunePool(
+    address nftPoolAddress, IERC20 rewardsToken1, IERC20 rewardsToken2, RunePool.Settings calldata settings
+  ) external virtual returns (address runePool) {
 
-    // Initialize new nitro pool
-    nitroPool = address(
-      new NitroPool(
+    // Initialize new rune pool
+    runePool = address(
+      new RunePool(
         eldenToken, sEldenToken, msg.sender, INFTPool(nftPoolAddress),
           rewardsToken1, rewardsToken2, settings
       )
     );
 
-    // Add new nitro
-    _nitroPools.add(nitroPool);
-    _ownerNitroPools[msg.sender].add(nitroPool);
+    // Add new rune
+    _runePools.add(runePool);
+    _ownerRunePools[msg.sender].add(runePool);
 
-    emit CreateNitroPool(nitroPool);
+    emit CreateRunePool(runePool);
   }
 
   /**
-   * @dev Publish a Nitro Pool
+   * @dev Publish a Rune Pool
    *
-   * Must only be called by the Nitro Pool contract
+   * Must only be called by the Rune Pool contract
    */
-  function publishNitroPool(address nftAddress) external override nitroPoolExists(msg.sender) {
-    _publishedNitroPools.add(msg.sender);
+  function publishRunePool(address nftAddress) external override runePoolExists(msg.sender) {
+    _publishedRunePools.add(msg.sender);
 
-    _nftPoolPublishedNitroPools[nftAddress].add(msg.sender);
+    _nftPoolPublishedRunePools[nftAddress].add(msg.sender);
 
-    emit PublishNitroPool(msg.sender);
+    emit PublishRunePool(msg.sender);
   }
 
   /**
-   * @dev Transfers a Nitro Pool's ownership
+   * @dev Transfers a Rune Pool's ownership
    *
-   * Must only be called by the NitroPool contract
+   * Must only be called by the RunePool contract
    */
-  function setNitroPoolOwner(address previousOwner, address newOwner) external override nitroPoolExists(msg.sender) {
-    require(_ownerNitroPools[previousOwner].remove(msg.sender), "invalid owner");
-    _ownerNitroPools[newOwner].add(msg.sender);
+  function setRunePoolOwner(address previousOwner, address newOwner) external override runePoolExists(msg.sender) {
+    require(_ownerRunePools[previousOwner].remove(msg.sender), "invalid owner");
+    _ownerRunePools[newOwner].add(msg.sender);
 
-    emit SetNitroPoolOwner(previousOwner, newOwner);
+    emit SetRunePoolOwner(previousOwner, newOwner);
   }
 
   /**
-   * @dev Set nitroPools default fee (when adding rewards)
+   * @dev Set runePools default fee (when adding rewards)
    *
    * Must only be called by the owner
    */

@@ -15,7 +15,7 @@ import "./interfaces/tokens/ISEldenToken.sol";
 
 
 /*
- * This contract is a SElden Usage (plugin) that can boost spNFTs' yield (staking positions on NFTPools) when it
+ * This contract is a SElden Usage (plugin) that can boost esNFTs' yield (staking positions on NFTPools) when it
  * receives allocations from the SEldenToken contract
  */
 contract YieldBooster is Ownable, ReentrancyGuard, ISEldenTokenUsage, IYieldBooster {
@@ -109,7 +109,7 @@ contract YieldBooster is Ownable, ReentrancyGuard, ISEldenTokenUsage, IYieldBoos
   }
 
   /**
-   * @dev Returns allocated SElden to "tokenId" spNFT from "poolAddress" NFTPool by "userAddress"
+   * @dev Returns allocated SElden to "tokenId" esNFT from "poolAddress" NFTPool by "userAddress"
    */
   function getUserPositionAllocation(address userAddress, address poolAddress, uint256 tokenId) external view returns (uint256) {
     return usersPositionsAllocation[userAddress][poolAddress][tokenId];
@@ -185,7 +185,7 @@ contract YieldBooster is Ownable, ReentrancyGuard, ISEldenTokenUsage, IYieldBoos
     (address poolAddress, uint256 tokenId) = abi.decode(data, (address, uint256));
     _allocate(userAddress, poolAddress, tokenId, amount);
 
-    // allocated SElden is added (as boost points) to spNFT
+    // allocated SElden is added (as boost points) to esNFT
     INFTPool(poolAddress).boost(tokenId, amount);
   }
 
@@ -199,9 +199,9 @@ contract YieldBooster is Ownable, ReentrancyGuard, ISEldenTokenUsage, IYieldBoos
     (address poolAddress, uint256 tokenId) = abi.decode(data, (address, uint256));
     _deallocate(userAddress, poolAddress, tokenId, amount);
 
-    // should only be called if spNFT has not been burned, to avoid having stuck SElden on it
+    // should only be called if esNFT has not been burned, to avoid having stuck SElden on it
     if(INFTPool(poolAddress).exists(tokenId)) {
-      // allocated SElden is removed (as boost points) from the spNFT
+      // allocated SElden is removed (as boost points) from the esNFT
       INFTPool(poolAddress).unboost(tokenId, amount);
     }
   }
@@ -210,7 +210,7 @@ contract YieldBooster is Ownable, ReentrancyGuard, ISEldenTokenUsage, IYieldBoos
    * Deallocates "userAddress" user's "amount" of SElden from this usage contract
    *
    * Can only be used by a pool contract, as msg.sender is used as poolAddress
-   * The pool should remove the allocated SElden (boost points) from its own spNFT when calling this function
+   * The pool should remove the allocated SElden (boost points) from its own esNFT when calling this function
    */
   function deallocateAllFromPool(address userAddress, uint256 tokenId) external override nonReentrant {
     uint256 amount = usersPositionsAllocation[userAddress][msg.sender][tokenId];
@@ -240,7 +240,7 @@ contract YieldBooster is Ownable, ReentrancyGuard, ISEldenTokenUsage, IYieldBoos
   /*****************************************************************/
 
   /**
-   * @dev Returns multiplier that should be applied to a spNFT based on its boost points (allocated SElden)
+   * @dev Returns multiplier that should be applied to a esNFT based on its boost points (allocated SElden)
    *
    * The calculation is simply based on the ratio between userBoostPoints/totalPoolBoostPoints and userLP/totalLP
    * To get the max bonus on a position where a user owns 1% of the pool's LP supply, he will have to allocate at least
@@ -256,7 +256,7 @@ contract YieldBooster is Ownable, ReentrancyGuard, ISEldenTokenUsage, IYieldBoos
   }
 
   /**
-   * @dev Allocates "userAddress" user's "amount" of SElden to "tokenId" spNFT of "poolAddress" pool
+   * @dev Allocates "userAddress" user's "amount" of SElden to "tokenId" esNFT of "poolAddress" pool
    */
   function _allocate(address userAddress, address poolAddress, uint256 tokenId, uint256 amount) internal {
     _usersTotalAllocation[userAddress] = _usersTotalAllocation[userAddress].add(amount);
@@ -269,7 +269,7 @@ contract YieldBooster is Ownable, ReentrancyGuard, ISEldenTokenUsage, IYieldBoos
   }
 
   /**
-   * @dev Deallocates "userAddress" user's "amount" of SElden allocated to "tokenId" spNFT of "poolAddress" pool
+   * @dev Deallocates "userAddress" user's "amount" of SElden allocated to "tokenId" esNFT of "poolAddress" pool
    */
   function _deallocate(address userAddress, address poolAddress, uint256 tokenId, uint256 amount) internal {
     uint256 userPositionAllocation = usersPositionsAllocation[userAddress][poolAddress][tokenId];

@@ -16,11 +16,11 @@ import "./interfaces/tokens/ISEldenToken.sol";
 
 
 /*
- * This contract wraps ERC20 assets into non-fungible staking positions called spNFTs
- * spNFTs add the possibility to create an additional layer on liquidity providing lock features
- * spNFTs are yield-generating positions when the NFTPool contract has allocations from the Elden Master
+ * This contract wraps ERC20 assets into non-fungible staking positions called esNFTs
+ * esNFTs add the possibility to create an additional layer on liquidity providing lock features
+ * esNFTs are yield-generating positions when the NFTPool contract has allocations from the Elden Master
  */
-contract NFTPool is ReentrancyGuard, INFTPool, ERC721("Elden staking position NFT", "spNFT") {
+contract NFTPool is ReentrancyGuard, INFTPool, ERC721("Elden staking position NFT", "esNFT") {
   using Address for address;
   using Counters for Counters.Counter;
   using EnumerableSet for EnumerableSet.AddressSet;
@@ -44,7 +44,7 @@ contract NFTPool is ReentrancyGuard, INFTPool, ERC721("Elden staking position NF
 
   Counters.Counter private _tokenIds;
 
-  EnumerableSet.AddressSet private _unlockOperators; // Addresses allowed to forcibly unlock locked spNFTs
+  EnumerableSet.AddressSet private _unlockOperators; // Addresses allowed to forcibly unlock locked esNFTs
   address public operator; // Used to delegate multiplier settings to project's owners
   IEldenMaster public master; // Address of the master
   address public immutable factory; // NFTPoolFactory contract's address
@@ -137,7 +137,7 @@ contract NFTPool is ReentrancyGuard, INFTPool, ERC721("Elden staking position NF
 
 
   /**
-   * @dev Check if a userAddress has privileged rights on a spNFT
+   * @dev Check if a userAddress has privileged rights on a esNFT
    */
   function _requireOnlyOperatorOrOwnerOf(uint256 tokenId) internal view {
     // isApprovedOrOwner: caller has no rights on token
@@ -146,7 +146,7 @@ contract NFTPool is ReentrancyGuard, INFTPool, ERC721("Elden staking position NF
 
 
   /**
-   * @dev Check if a userAddress has privileged rights on a spNFT
+   * @dev Check if a userAddress has privileged rights on a esNFT
    */
   function _requireOnlyApprovedOrOwnerOf(uint256 tokenId) internal view {
     require(_exists(tokenId), "ERC721: operator query for nonexistent token");
@@ -154,7 +154,7 @@ contract NFTPool is ReentrancyGuard, INFTPool, ERC721("Elden staking position NF
   }
 
   /**
-   * @dev Check if a msg.sender is owner of a spNFT
+   * @dev Check if a msg.sender is owner of a esNFT
    */
   function _requireOnlyOwnerOf(uint256 tokenId) internal view {
     require(_exists(tokenId), "ERC721: operator query for nonexistent token");
@@ -204,7 +204,7 @@ contract NFTPool is ReentrancyGuard, INFTPool, ERC721("Elden staking position NF
   }
 
   /**
-   * @dev Returns true if "tokenId" is an existing spNFT id
+   * @dev Returns true if "tokenId" is an existing esNFT id
    */
   function exists(uint256 tokenId) external view override returns (bool) {
     return ERC721._exists(tokenId);
@@ -443,7 +443,7 @@ contract NFTPool is ReentrancyGuard, INFTPool, ERC721("Elden staking position NF
   }
 
   /**
-   * @dev Create a staking position (spNFT) with an optional lockDuration
+   * @dev Create a staking position (esNFT) with an optional lockDuration
    */
   function createPosition(uint256 amount, uint256 lockDuration) external override nonReentrant {
     // no new lock can be set if the pool has been unlocked
@@ -488,7 +488,7 @@ contract NFTPool is ReentrancyGuard, INFTPool, ERC721("Elden staking position NF
   /**
    * @dev Add to an existing staking position
    *
-   * Can only be called by spNFT's owner or operators
+   * Can only be called by esNFT's owner or operators
    */
   function addToPosition(uint256 tokenId, uint256 amountToAdd) external nonReentrant {
     _requireOnlyOperatorOrOwnerOf(tokenId);
@@ -562,7 +562,7 @@ contract NFTPool is ReentrancyGuard, INFTPool, ERC721("Elden staking position NF
   /**
    * @dev Harvest from a staking position
    *
-   * Can only be called by spNFT's owner or approved address
+   * Can only be called by esNFT's owner or approved address
    */
   function harvestPosition(uint256 tokenId) external nonReentrant {
     _requireOnlyApprovedOrOwnerOf(tokenId);
@@ -575,8 +575,8 @@ contract NFTPool is ReentrancyGuard, INFTPool, ERC721("Elden staking position NF
   /**
    * @dev Harvest from a staking position to "to" address
    *
-   * Can only be called by spNFT's owner or approved address
-   * spNFT's owner must be a contract
+   * Can only be called by esNFT's owner or approved address
+   * esNFT's owner must be a contract
    */
   function harvestPositionTo(uint256 tokenId, address to) external nonReentrant {
     _requireOnlyApprovedOrOwnerOf(tokenId);
@@ -590,7 +590,7 @@ contract NFTPool is ReentrancyGuard, INFTPool, ERC721("Elden staking position NF
   /**
    * @dev Harvest from multiple staking positions to "to" address
    *
-   * Can only be called by spNFT's owner or approved address
+   * Can only be called by esNFT's owner or approved address
    */
   function harvestPositionsTo(uint256[] calldata tokenIds, address to) external nonReentrant {
     _updatePool();
@@ -613,7 +613,7 @@ contract NFTPool is ReentrancyGuard, INFTPool, ERC721("Elden staking position NF
   /**
    * @dev Withdraw from a staking position
    *
-   * Can only be called by spNFT's owner or approved address
+   * Can only be called by esNFT's owner or approved address
    */
   function withdrawFromPosition(uint256 tokenId, uint256 amountToWithdraw) external nonReentrant {
     _requireOnlyApprovedOrOwnerOf(tokenId);
@@ -627,7 +627,7 @@ contract NFTPool is ReentrancyGuard, INFTPool, ERC721("Elden staking position NF
   /**
    * @dev Renew lock from a staking position
    *
-   * Can only be called by spNFT's owner or approved address
+   * Can only be called by esNFT's owner or approved address
    */
   function renewLockPosition(uint256 tokenId) external nonReentrant {
     _requireOnlyApprovedOrOwnerOf(tokenId);
@@ -639,7 +639,7 @@ contract NFTPool is ReentrancyGuard, INFTPool, ERC721("Elden staking position NF
   /**
    * @dev Lock a staking position (can be used to extend a lock)
    *
-   * Can only be called by spNFT's owner or approved address
+   * Can only be called by esNFT's owner or approved address
    */
   function lockPosition(uint256 tokenId, uint256 lockDuration) external nonReentrant {
     _requireOnlyApprovedOrOwnerOf(tokenId);
@@ -694,7 +694,7 @@ contract NFTPool is ReentrancyGuard, INFTPool, ERC721("Elden staking position NF
    * @dev Merge an array of staking positions into a single one with "lockDuration"
    * Can't be used on positions with a higher lock duration than "lockDuration" param
    *
-   * Can only be called by spNFT's owner
+   * Can only be called by esNFT's owner
    */
   function mergePositions(uint256[] calldata tokenIds, uint256 lockDuration) external nonReentrant {
     _updatePool();
@@ -747,7 +747,7 @@ contract NFTPool is ReentrancyGuard, INFTPool, ERC721("Elden staking position NF
   /**
    * Withdraw without caring about rewards, EMERGENCY ONLY
    *
-   * Can only be called by spNFT's owner
+   * Can only be called by esNFT's owner
    */
   function emergencyWithdraw(uint256 tokenId) external nonReentrant {
     _requireOnlyOwnerOf(tokenId);
@@ -777,7 +777,7 @@ contract NFTPool is ReentrancyGuard, INFTPool, ERC721("Elden staking position NF
   /********************************************************/
 
   /**
-   * @dev Returns whether "userAddress" is the owner of "tokenId" spNFT
+   * @dev Returns whether "userAddress" is the owner of "tokenId" esNFT
    */
   function _isOwnerOf(address userAddress, uint256 tokenId) internal view returns (bool){
     return userAddress == ERC721.ownerOf(tokenId);
@@ -798,24 +798,24 @@ contract NFTPool is ReentrancyGuard, INFTPool, ERC721("Elden staking position NF
   }
 
   /**
-   * @dev Destroys spNFT
+   * @dev Destroys esNFT
    *
    * "boostPointsToDeallocate" is set to 0 to ignore boost points handling if called during an emergencyWithdraw
    * Users should still be able to deallocate SElden from the YieldBooster contract
    */
   function _destroyPosition(uint256 tokenId, uint256 boostPoints) internal {
-    // calls yieldBooster contract to deallocate the spNFT's owner boost points if any
+    // calls yieldBooster contract to deallocate the esNFT's owner boost points if any
     if (boostPoints > 0) {
       IYieldBooster(yieldBooster()).deallocateAllFromPool(msg.sender, tokenId);
     }
 
-    // burn spNFT
+    // burn esNFT
     delete _stakingPositions[tokenId];
     ERC721._burn(tokenId);
   }
 
   /**
-   * @dev Computes new tokenId and mint associated spNFT to "to" address
+   * @dev Computes new tokenId and mint associated esNFT to "to" address
    */
   function _mintNextTokenId(address to) internal returns (uint256 tokenId) {
     _tokenIds.increment();
@@ -1018,7 +1018,7 @@ contract NFTPool is ReentrancyGuard, INFTPool, ERC721("Elden staking position NF
   }
 
   /**
-  * @dev Forbid transfer when spNFT's owner is a contract and an operator is trying to transfer it
+  * @dev Forbid transfer when esNFT's owner is a contract and an operator is trying to transfer it
   * This is made to avoid unintended side effects
   *
   * Contract owner can still implement it by itself if needed

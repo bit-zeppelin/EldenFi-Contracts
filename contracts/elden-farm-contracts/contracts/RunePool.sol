@@ -11,13 +11,13 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 import "./interfaces/INFTHandler.sol";
 import "./interfaces/INFTPool.sol";
-import "./interfaces/INitroPoolFactory.sol";
+import "./interfaces/IRunePoolFactory.sol";
 import "./interfaces/tokens/IEldenToken.sol";
 import "./interfaces/tokens/ISEldenToken.sol";
-import "./interfaces/INitroCustomReq.sol";
+import "./interfaces/IRuneCustomReq.sol";
 
 
-contract NitroPool is ReentrancyGuard, Ownable, INFTHandler {
+contract RunePool is ReentrancyGuard, Ownable, INFTHandler {
     using EnumerableSet for EnumerableSet.UintSet;
     using EnumerableSet for EnumerableSet.AddressSet;
     using SafeERC20 for IERC20;
@@ -42,7 +42,7 @@ contract NitroPool is ReentrancyGuard, Ownable, INFTHandler {
         uint256 lockEndReq; // (optional) required lock end time for positions
         uint256 depositAmountReq; // (optional) required deposit amount for positions
         bool whitelist; // (optional) to only allow whitelisted users to deposit
-        string description; // Project's description for this NitroPool
+        string description; // Project's description for this RunePool
     }
 
     struct RewardsToken {
@@ -59,16 +59,16 @@ contract NitroPool is ReentrancyGuard, Ownable, INFTHandler {
 
     bytes4 private constant _ERC721_RECEIVED = 0x150b7a02;
 
-    INitroPoolFactory public factory; // NitroPoolFactory address
+    IRunePoolFactory public factory; // RunePoolFactory address
     IEldenToken public eldenToken; // ELDENToken contract
     ISEldenToken public sEldenToken; // SEldenToken contract
     INFTPool public nftPool; // NFTPool contract
-    INitroCustomReq public customReqContract; // (optional) external contracts allow to handle custom requirements
+    IRuneCustomReq public customReqContract; // (optional) external contracts allow to handle custom requirements
 
-    uint256 public creationTime; // Creation time of this NitroPool
+    uint256 public creationTime; // Creation time of this RunePool
 
-    bool public published; // Is NitroPool published
-    uint256 public publishTime; // Time at which the NitroPool was published
+    bool public published; // Is RunePool published
+    uint256 public publishTime; // Time at which the RunePool was published
 
     bool public emergencyClose; // When activated, can't distribute rewards anymore
 
@@ -98,7 +98,7 @@ contract NitroPool is ReentrancyGuard, Ownable, INFTHandler {
         require(settings_.harvestStartTime == 0 || settings_.startTime <= settings_.harvestStartTime, "invalid harvestStartTime");
         require(address(rewardsToken1_) != address(rewardsToken2_), "invalid tokens");
 
-        factory = INitroPoolFactory(msg.sender);
+        factory = IRunePoolFactory(msg.sender);
 
         eldenToken = eldenToken_;
         sEldenToken = sEldenToken_;
@@ -244,7 +244,7 @@ contract NitroPool is ReentrancyGuard, Ownable, INFTHandler {
     /*****************************************************************/
 
     /**
-     * @dev Update this NitroPool
+     * @dev Update this RunePool
      */
     function updatePool() external nonReentrant {
         _updatePool();
@@ -272,7 +272,7 @@ contract NitroPool is ReentrancyGuard, Ownable, INFTHandler {
     }
 
     /**
-     * @dev Withdraw a position from the NitroPool
+     * @dev Withdraw a position from the RunePool
      *
      * Can only be called by the position's previous owner
      */
@@ -300,7 +300,7 @@ contract NitroPool is ReentrancyGuard, Ownable, INFTHandler {
     }
 
     /**
-     * @dev Withdraw a position from the NitroPool without caring about rewards, EMERGENCY ONLY
+     * @dev Withdraw a position from the RunePool without caring about rewards, EMERGENCY ONLY
      *
      * Can only be called by position's previous owner
      */
@@ -324,7 +324,7 @@ contract NitroPool is ReentrancyGuard, Ownable, INFTHandler {
     }
 
     /**
-     * @dev Harvest pending NitroPool rewards
+     * @dev Harvest pending RunePool rewards
      */
     function harvest() external nonReentrant {
         _updatePool();
@@ -343,7 +343,7 @@ contract NitroPool is ReentrancyGuard, Ownable, INFTHandler {
         address owner = tokenIdOwner[tokenId];
         require(operator == owner, "not allowed");
 
-        // if not whitelisted, the NitroPool can't transfer any SElden rewards
+        // if not whitelisted, the RunePool can't transfer any SElden rewards
         require(to != address(this) || sEldenToken.isTransferWhitelisted(address(this)), "cant handle rewards");
 
         // redirect rewards to position's previous owner
@@ -377,34 +377,34 @@ contract NitroPool is ReentrancyGuard, Ownable, INFTHandler {
     /*****************************************************************/
 
     /**
-     * @dev Transfer ownership of this NitroPool
+     * @dev Transfer ownership of this RunePool
      *
      * Must only be called by the owner of this contract
      */
     function transferOwnership(address newOwner) public override onlyOwner {
-        _setNitroPoolOwner(newOwner);
+        _setRunePoolOwner(newOwner);
         Ownable.transferOwnership(newOwner);
     }
 
     /**
-     * @dev Transfer ownership of this NitroPool
+     * @dev Transfer ownership of this RunePool
      *
      * Must only be called by the owner of this contract
      */
     function renounceOwnership() public override onlyOwner {
-        _setNitroPoolOwner(address(0));
+        _setRunePoolOwner(address(0));
         Ownable.renounceOwnership();
     }
 
     /**
-     * @dev Add rewards to this NitroPool
+     * @dev Add rewards to this RunePool
      */
     function addRewards(uint256 amountToken1, uint256 amountToken2) external nonReentrant {
         require(_currentBlockTimestamp() < settings.endTime, "pool ended");
         _updatePool();
 
-        // get active fee share for this NitroPool
-        uint256 feeShare = factory.getNitroPoolFee(address(this), owner());
+        // get active fee share for this RunePool
+        uint256 feeShare = factory.getRunePoolFee(address(this), owner());
         address feeAddress = factory.feeAddress();
         uint256 feeAmount;
 
@@ -444,10 +444,10 @@ contract NitroPool is ReentrancyGuard, Ownable, INFTHandler {
     }
 
     /**
-     * @dev Withdraw rewards from this NitroPool
+     * @dev Withdraw rewards from this RunePool
      *
      * Must only be called by the owner
-     * Must only be called before the publication of the Nitro Pool
+     * Must only be called before the publication of the Rune Pool
      */
     function withdrawRewards(uint256 amountToken1, uint256 amountToken2) external onlyOwner nonReentrant {
         require(!published, "published");
@@ -492,13 +492,13 @@ contract NitroPool is ReentrancyGuard, Ownable, INFTHandler {
     function setCustomReqContract(address contractAddress) external onlyOwner {
         // Allow to disable customReq event if pool is published
         require(!published || contractAddress == address(0), "published");
-        customReqContract = INitroCustomReq(contractAddress);
+        customReqContract = IRuneCustomReq(contractAddress);
 
         emit SetCustomReqContract(contractAddress);
     }
 
     /**
-     * @dev Set requirements that positions must meet to be staked on this Nitro Pool
+     * @dev Set requirements that positions must meet to be staked on this Rune Pool
      *
      * Must only be called by the owner
      */
@@ -510,7 +510,7 @@ contract NitroPool is ReentrancyGuard, Ownable, INFTHandler {
      * @dev Set the pool's datetime settings
      *
      * Must only be called by the owner
-     * Nitro duration can only be extended once already published
+     * Rune duration can only be extended once already published
      * Harvest start time can only be updated if not published
      * Deposit end time can only be updated if not been published
      */
@@ -580,19 +580,19 @@ contract NitroPool is ReentrancyGuard, Ownable, INFTHandler {
     }
 
     /**
-     * @dev Publish the Nitro Pool
+     * @dev Publish the Rune Pool
      *
      * Must only be called by the owner
      */
     function publish() external onlyOwner {
         require(!published, "published");
-        // this nitroPool is Stale
+        // this runePool is Stale
         require(settings.startTime > _currentBlockTimestamp(), "stale");
         require(rewardsToken1.amount > 0, "no rewards");
 
         published = true;
         publishTime = _currentBlockTimestamp();
-        factory.publishNitroPool(address(nftPool));
+        factory.publishRunePool(address(nftPool));
 
         emit Publish();
     }
@@ -630,7 +630,7 @@ contract NitroPool is ReentrancyGuard, Ownable, INFTHandler {
     /********************************************************/
 
     /**
-     * @dev Set requirements that positions must meet to be staked on this Nitro Pool
+     * @dev Set requirements that positions must meet to be staked on this Rune Pool
      */
     function _setRequirements(uint256 lockDurationReq_, uint256 lockEndReq_, uint256 depositAmountReq_, bool whitelist_) internal {
         require(lockEndReq_ == 0 || settings.startTime < lockEndReq_, "invalid lockEnd");
@@ -652,7 +652,7 @@ contract NitroPool is ReentrancyGuard, Ownable, INFTHandler {
     }
 
     /**
-     * @dev Updates rewards states of this Nitro Pool to be up-to-date
+     * @dev Updates rewards states of this Rune Pool to be up-to-date
      */
     function _updatePool() internal {
         uint256 currentBlockTimestamp = _currentBlockTimestamp();
@@ -688,7 +688,7 @@ contract NitroPool is ReentrancyGuard, Ownable, INFTHandler {
     }
 
     /**
-     * @dev Add a user's deposited amount into this Nitro Pool
+     * @dev Add a user's deposited amount into this Rune Pool
      */
     function _deposit(address account, uint256 tokenId, uint256 amount) internal {
         require((settings.depositEndTime == 0 || settings.depositEndTime >= _currentBlockTimestamp()) && !emergencyClose, "not allowed");
@@ -763,7 +763,7 @@ contract NitroPool is ReentrancyGuard, Ownable, INFTHandler {
     }
 
     /**
-     * @dev Check whether a position with "tokenId" ID is meeting all of this Nitro Pool's active requirements
+     * @dev Check whether a position with "tokenId" ID is meeting all of this Rune Pool's active requirements
      */
     function _checkPositionRequirements(uint256 amount, uint256 startLockTime, uint256 lockDuration) internal virtual {
         // lock duration requirement
@@ -812,8 +812,8 @@ contract NitroPool is ReentrancyGuard, Ownable, INFTHandler {
         (amount,, startLockTime, lockDuration,,,,) = nftPool.getStakingPosition(tokenId);
     }
 
-    function _setNitroPoolOwner(address newOwner) internal {
-        factory.setNitroPoolOwner(owner(), newOwner);
+    function _setRunePoolOwner(address newOwner) internal {
+        factory.setRunePoolOwner(owner(), newOwner);
     }
 
     /**
