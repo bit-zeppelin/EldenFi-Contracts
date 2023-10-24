@@ -1,7 +1,7 @@
 {
-  "EldenStableSwapLPFactory": "0x23955698742A05910643DB2b3691B19F42F81166",
-  "EldenStableSwapTwoPoolDeployer": "0xEe4B9d528c57CE0B2B8EC53DD6BabBb74545842E",
-  "EldenStableSwapThreePoolDeployer": "0x38eFD4E49938e16cBdc3263C97F94630d5132E52",
-  "EldenStableSwapFactory": "0xbf434d9C52dbb7b58E532497f1dD43b699a00a9C",
-  "EldenStableSwapTwoPoolInfo": "0xE3E87F8211b8f6604F4E623dB197Df28e91df4d1"
+  "EldenStableSwapLPFactory": "0x33aC5145e06E1a0e47a08d65FAAf6E361d2E978a",
+  "EldenStableSwapTwoPoolDeployer": "0x35099ac29302dF69562bB541b0955738A399AF98",
+  "EldenStableSwapThreePoolDeployer": "0x8694847eD9F874917B9a9D4c3D57f37fEf24ca21",
+  "EldenStableSwapFactory": "0x0aD991a227925E4f12272Fd1D298cEB61338b68e",
+  "EldenStableSwapTwoPoolInfo": "0xF2dEaD06589A23F61a16B44aCFfcce6382b3aBE7"
 }

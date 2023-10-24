@@ -16,6 +16,8 @@ const artifacts: { [name: string]: ContractJson } = {
   EldenStableSwapFactory: require('../artifacts/contracts/EldenStableSwapFactory.sol/EldenStableSwapFactory.json'),
   // eslint-disable-next-line global-require
   EldenStableSwapTwoPoolInfo: require('../artifacts/contracts/EldenStableSwapTwoPoolInfo.sol/EldenStableSwapTwoPoolInfo.json'),
+  // eslint-disable-next-line global-require
+  EldenStableSwapInfo: require('../artifacts/contracts/EldenStableSwapInfo.sol/EldenStableSwapInfo.json'),
 }
 
 async function main() {
@@ -142,7 +144,13 @@ async function main() {
   // sleep(100)
 
 
-
+  const EldenStableSwapInfo = new ContractFactory(
+    artifacts.EldenStableSwapInfo.abi,
+    artifacts.EldenStableSwapInfo.bytecode,
+    owner
+  )
+  const eldenStableSwapInfo = await EldenStableSwapInfo.deploy(
+  )
 
 
 
@@ -151,7 +159,8 @@ async function main() {
     EldenStableSwapTwoPoolDeployer: eldenStableSwapTwoPoolDeployer_address,
     EldenStableSwapThreePoolDeployer: eldenStableSwapThreePoolDeployer_address,
     EldenStableSwapFactory: eldenStableSwapFactory_address,
-    EldenStableSwapTwoPoolInfo: eldenStableSwapTwoPoolInfo_address
+    EldenStableSwapTwoPoolInfo: eldenStableSwapTwoPoolInfo_address,
+    EldenStableSwapInfo: eldenStableSwapInfo.address
   }
 
   fs.writeFileSync(`./deployments/${networkName}.json`, JSON.stringify(contracts, null, 2))
