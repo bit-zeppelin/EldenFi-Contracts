@@ -19,7 +19,7 @@ import "./interfaces/ISEldenTokenUsage.sol";
  * It can be converted back to ELDEN through a vesting process
  * This contract is made to receive SElden deposits from users in order to allocate them to Usages (plugins) contracts
  */
-contract SEldenToken is Ownable, ReentrancyGuard, ERC20("Elden Escrowed Token", "sELDEN"), ISEldenToken {
+contract SEldenToken is Ownable, ReentrancyGuard, ERC20("Elden Staked Token", "sELDEN"), ISEldenToken {
   using Address for address;
   using SafeMath for uint256;
   using EnumerableSet for EnumerableSet.AddressSet;
