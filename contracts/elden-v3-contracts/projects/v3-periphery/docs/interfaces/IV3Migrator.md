@@ -2,7 +2,7 @@
 
 ## IV3Migrator
 
-Enables migration of liqudity from PancakeSwap v2-compatible pairs into PancakeSwap v3 pools
+Enables migration of liqudity from EldenSwap v2-compatible pairs into EldenSwap v3 pools
 
 ### MigrateParams
 

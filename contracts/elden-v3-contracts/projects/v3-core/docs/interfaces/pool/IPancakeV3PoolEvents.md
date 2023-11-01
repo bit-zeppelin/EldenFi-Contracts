@@ -1,6 +1,6 @@
 # Solidity API
 
-## IPancakeV3PoolEvents
+## IEldenV3PoolEvents
 
 Contains all events emitted by the pool
 

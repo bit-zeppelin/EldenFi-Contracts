@@ -101,7 +101,7 @@ contract NFTPool is ReentrancyGuard, INFTPool, ERC721("Elden staking position NF
   event EmergencyWithdraw(uint256 indexed tokenId, uint256 amount);
   event LockPosition(uint256 indexed tokenId, uint256 lockDuration);
   event SplitPosition(uint256 indexed tokenId, uint256 splitAmount, uint256 newTokenId);
-  event MergePositions(address indexed user, uint256[] tokenIds);
+  event MergePositions(address indexed user, uint256[] tokenIds, uint256 startLockTime, uint256 lockDuration);
   event HarvestPosition(uint256 indexed tokenId, address to, uint256 pending);
   event SetBoost(uint256 indexed tokenId, uint256 boostPoints);
 
@@ -741,7 +741,7 @@ contract NFTPool is ReentrancyGuard, INFTPool, ERC721("Elden staking position NF
     }
 
     _updateBoostMultiplierInfoAndRewardDebt(dstPosition);
-    emit MergePositions(msg.sender, tokenIds);
+    emit MergePositions(msg.sender, tokenIds, dstPosition.startLockTime, dstPosition.lockDuration);
   }
 
   /**

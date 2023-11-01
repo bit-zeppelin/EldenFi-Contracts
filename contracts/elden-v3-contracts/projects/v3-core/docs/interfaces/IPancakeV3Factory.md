@@ -1,8 +1,8 @@
 # Solidity API
 
-## IPancakeV3Factory
+## IEldenV3Factory
 
-The PancakeSwap V3 Factory facilitates creation of PancakeSwap V3 pools and control over the protocol fees
+The EldenSwap V3 Factory facilitates creation of EldenSwap V3 pools and control over the protocol fees
 
 ### TickSpacingExtraInfo
 

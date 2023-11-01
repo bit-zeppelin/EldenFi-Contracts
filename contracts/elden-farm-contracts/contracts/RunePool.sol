@@ -14,7 +14,6 @@ import "./interfaces/INFTPool.sol";
 import "./interfaces/IRunePoolFactory.sol";
 import "./interfaces/tokens/IEldenToken.sol";
 import "./interfaces/tokens/ISEldenToken.sol";
-import "./interfaces/IRuneCustomReq.sol";
 
 
 contract RunePool is ReentrancyGuard, Ownable, INFTHandler {
@@ -63,7 +62,6 @@ contract RunePool is ReentrancyGuard, Ownable, INFTHandler {
     IEldenToken public eldenToken; // ELDENToken contract
     ISEldenToken public sEldenToken; // SEldenToken contract
     INFTPool public nftPool; // NFTPool contract
-    IRuneCustomReq public customReqContract; // (optional) external contracts allow to handle custom requirements
 
     uint256 public creationTime; // Creation time of this RunePool
 
@@ -138,8 +136,7 @@ contract RunePool is ReentrancyGuard, Ownable, INFTHandler {
     event SetDescription(string description);
     event SetRequirements(uint256 lockDurationReq, uint256 lockEndReq, uint256 depositAmountReq, bool whitelist);
     event SetRewardsToken2(IERC20 rewardsToken2);
-    event SetCustomReqContract(address contractAddress);
-    event UpdatePool();
+    event UpdatePool(uint256 rewardsToken1Amount, uint256 rewardsToken2Amount, uint256 rewardsToken1RemainingAmount, uint256 rewardsToken2RemainingAmount);
     event WhitelistUpdated();
     event Withdraw(address indexed userAddress, uint256 tokenId, uint256 amount);
     event EmergencyWithdraw(address indexed userAddress, uint256 tokenId, uint256 amount);
@@ -487,17 +484,6 @@ contract RunePool is ReentrancyGuard, Ownable, INFTHandler {
     }
 
     /**
-     * @dev Set an external custom requirement contract
-     */
-    function setCustomReqContract(address contractAddress) external onlyOwner {
-        // Allow to disable customReq event if pool is published
-        require(!published || contractAddress == address(0), "published");
-        customReqContract = IRuneCustomReq(contractAddress);
-
-        emit SetCustomReqContract(contractAddress);
-    }
-
-    /**
      * @dev Set requirements that positions must meet to be staked on this Rune Pool
      *
      * Must only be called by the owner
@@ -662,7 +648,7 @@ contract RunePool is ReentrancyGuard, Ownable, INFTHandler {
         // do nothing if there is no deposit
         if (totalDepositAmount == 0) {
             lastRewardTime = currentBlockTimestamp;
-            emit UpdatePool();
+            emit UpdatePool(rewardsToken1.amount, rewardsToken2.amount, rewardsToken1.remainingAmount, rewardsToken2.remainingAmount);
             return;
         }
 
@@ -684,7 +670,7 @@ contract RunePool is ReentrancyGuard, Ownable, INFTHandler {
         }
 
         lastRewardTime = currentBlockTimestamp;
-        emit UpdatePool();
+        emit UpdatePool(rewardsToken1.amount, rewardsToken2.amount, rewardsToken1.remainingAmount, rewardsToken2.remainingAmount);
     }
 
     /**
@@ -692,10 +678,6 @@ contract RunePool is ReentrancyGuard, Ownable, INFTHandler {
      */
     function _deposit(address account, uint256 tokenId, uint256 amount) internal {
         require((settings.depositEndTime == 0 || settings.depositEndTime >= _currentBlockTimestamp()) && !emergencyClose, "not allowed");
-
-        if(address(customReqContract) != address(0)){
-            require(customReqContract.canDeposit(account, tokenId), "invalid customReq");
-        }
 
         _updatePool();
 
@@ -714,10 +696,7 @@ contract RunePool is ReentrancyGuard, Ownable, INFTHandler {
      */
     function _harvest(UserInfo storage user, address to) internal {
         bool canHarvest = true;
-        if(address(customReqContract) != address(0)){
-            canHarvest = customReqContract.canHarvest(to);
-        }
-
+        
         // rewardsToken1
         uint256 pending = user.totalDepositAmount.mul(rewardsToken1.accRewardsPerShare).div(1e18).sub(user.rewardDebtToken1);
         // check if harvest is allowed

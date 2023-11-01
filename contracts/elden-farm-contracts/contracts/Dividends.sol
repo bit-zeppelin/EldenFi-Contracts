@@ -373,6 +373,10 @@ contract Dividends is Ownable, ReentrancyGuard, ISEldenTokenUsage, IDividends {
     emit DistributedTokenRemoved(tokenToRemove);
   }
 
+  function updateCycleDurationSeconds(uint256 newCycleDurationSeconds_) external onlyOwner {
+    _cycleDurationSeconds = newCycleDurationSeconds_;
+  }
+
   /********************************************************/
   /****************** INTERNAL FUNCTIONS ******************/
   /********************************************************/

@@ -5,9 +5,9 @@ import {
   PositionValueTest,
   SwapRouter,
   MockTimeNonfungiblePositionManager,
-  IPancakeV3Pool,
+  IEldenV3Pool,
   TestERC20,
-  IPancakeV3Factory,
+  IEldenV3Factory,
 } from '../typechain-types'
 import { FeeAmount, MaxUint128, TICK_SPACINGS } from './shared/constants'
 import { getMaxTick, getMinTick } from './shared/ticks'
@@ -20,7 +20,7 @@ import snapshotGasCost from './shared/snapshotGasCost'
 
 import { expect } from './shared/expect'
 
-import { abi as IPancakeV3PoolABI } from '@elden/v3-core/artifacts/contracts/interfaces/IPancakeV3Pool.sol/IPancakeV3Pool.json'
+import { abi as IEldenV3PoolABI } from '@elden/v3-core/artifacts/contracts/interfaces/IEldenV3Pool.sol/IEldenV3Pool.json'
 
 describe('PositionValue', async () => {
   const [...wallets] = waffle.provider.getWallets()
@@ -30,7 +30,7 @@ describe('PositionValue', async () => {
     nft: MockTimeNonfungiblePositionManager
     router: SwapRouter
     deployer: Contract
-    factory: IPancakeV3Factory
+    factory: IEldenV3Factory
   }> = async (wallets, provider) => {
     const { nft, router, tokens, factory, deployer } = await completeFixture(wallets, provider)
     const positionValueFactory = await ethers.getContractFactory('PositionValueTest')
@@ -58,7 +58,7 @@ describe('PositionValue', async () => {
   let positionValue: PositionValueTest
   let nft: MockTimeNonfungiblePositionManager
   let router: SwapRouter
-  let factory: IPancakeV3Factory
+  let factory: IEldenV3Factory
 
   let amountDesired: BigNumberish
 
@@ -77,7 +77,7 @@ describe('PositionValue', async () => {
     )
 
     const poolAddress = computePoolAddress(deployer.address, [tokens[0].address, tokens[1].address], FeeAmount.MEDIUM)
-    pool = new ethers.Contract(poolAddress, IPancakeV3PoolABI, wallets[0])
+    pool = new ethers.Contract(poolAddress, IEldenV3PoolABI, wallets[0])
   })
 
   describe('#total', () => {

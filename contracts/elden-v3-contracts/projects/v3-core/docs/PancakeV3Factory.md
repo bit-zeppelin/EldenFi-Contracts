@@ -1,8 +1,8 @@
 # Solidity API
 
-## PancakeV3Factory
+## EldenV3Factory
 
-Deploys PancakeSwap V3 pools and manages ownership and control over pool protocol fees
+Deploys EldenSwap V3 pools and manages ownership and control over pool protocol fees
 
 ### owner
 
@@ -70,7 +70,7 @@ _tokenA and tokenB may be passed in either token0/token1 or token1/token0 order_
 ### feeAmountTickSpacingExtraInfo
 
 ```solidity
-mapping(uint24 => struct IPancakeV3Factory.TickSpacingExtraInfo) feeAmountTickSpacingExtraInfo
+mapping(uint24 => struct IEldenV3Factory.TickSpacingExtraInfo) feeAmountTickSpacingExtraInfo
 ```
 
 Returns the tick spacing extra info

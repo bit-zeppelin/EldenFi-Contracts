@@ -1,22 +1,22 @@
 import {
   abi as FACTORY_ABI,
   bytecode as FACTORY_BYTECODE,
-} from '@elden/v3-core/artifacts/contracts/PancakeV3Factory.sol/PancakeV3Factory.json'
+} from '@elden/v3-core/artifacts/contracts/EldenV3Factory.sol/EldenV3Factory.json'
 import {
   abi as DEPLOYER_ABI,
   bytecode as DEPLOYER_BYTECODE,
-} from '@elden/v3-core/artifacts/contracts/PancakeV3PoolDeployer.sol/PancakeV3PoolDeployer.json'
+} from '@elden/v3-core/artifacts/contracts/EldenV3PoolDeployer.sol/EldenV3PoolDeployer.json'
 import { abi as FACTORY_V2_ABI, bytecode as FACTORY_V2_BYTECODE } from '@uniswap/v2-core/build/UniswapV2Factory.json'
-import { Fixture } from 'ethereum-waffle'
+import { Fixture, deployContract } from 'ethereum-waffle'
 import { ethers, waffle } from 'hardhat'
-import { IPancakeV3Factory, IWETH9, MockTimeSwapRouter } from '../../typechain-types'
+import { IEldenV3Factory, IWETH9, MockTimeSwapRouter } from '../../typechain-types'
 
 import WETH9 from '../contracts/WETH9.json'
 import { Contract } from '@ethersproject/contracts'
 import { constants } from 'ethers'
 
 const wethFixture: Fixture<{ weth9: IWETH9 }> = async ([wallet]) => {
-  const weth9 = (await waffle.deployContract(wallet, {
+  const weth9 = (await deployContract(wallet, {
     bytecode: WETH9.bytecode,
     abi: WETH9.abi,
   })) as IWETH9
@@ -25,7 +25,7 @@ const wethFixture: Fixture<{ weth9: IWETH9 }> = async ([wallet]) => {
 }
 
 export const v2FactoryFixture: Fixture<{ factory: Contract }> = async ([wallet]) => {
-  const factory = await waffle.deployContract(
+  const factory = await deployContract(
     wallet,
     {
       bytecode: FACTORY_V2_BYTECODE,
@@ -37,19 +37,19 @@ export const v2FactoryFixture: Fixture<{ factory: Contract }> = async ([wallet])
   return { factory }
 }
 
-const v3CoreFactoryFixture: Fixture<{ deployer: Contract; factory: IPancakeV3Factory }> = async ([wallet]) => {
-  const deployer = await waffle.deployContract(wallet, {
+const v3CoreFactoryFixture: Fixture<{ deployer: Contract; factory: IEldenV3Factory }> = async ([wallet]) => {
+  const deployer = await deployContract(wallet, {
     bytecode: DEPLOYER_BYTECODE,
     abi: DEPLOYER_ABI,
   })
-  const factory = (await waffle.deployContract(
+  const factory = (await deployContract(
     wallet,
     {
       bytecode: FACTORY_BYTECODE,
       abi: FACTORY_ABI,
     },
     [deployer.address]
-  )) as IPancakeV3Factory
+  )) as IEldenV3Factory
 
   await deployer.setFactoryAddress(factory.address)
 
@@ -61,7 +61,7 @@ const v3CoreFactoryFixture: Fixture<{ deployer: Contract; factory: IPancakeV3Fac
 
 export const v3RouterFixture: Fixture<{
   weth9: IWETH9
-  factory: IPancakeV3Factory
+  factory: IEldenV3Factory
   router: MockTimeSwapRouter
   deployer: any
 }> = async ([wallet], provider) => {

@@ -1,6 +1,6 @@
 import { ethers, waffle } from 'hardhat'
 import { Wallet } from 'ethers'
-import { MockTimePancakeV3Pool } from '../typechain-types/contracts/test/MockTimePancakeV3Pool'
+import { MockTimeEldenV3Pool } from '../typechain-types/contracts/test/MockTimeEldenV3Pool'
 import { expect } from './shared/expect'
 
 import { poolFixture } from './shared/fixtures'
@@ -24,7 +24,7 @@ import {
 
 const createFixtureLoader = waffle.createFixtureLoader
 
-describe('PancakeV3Pool gas tests', () => {
+describe('EldenV3Pool gas tests', () => {
   let wallet: Wallet, other: Wallet
 
   let loadFixture: ReturnType<typeof createFixtureLoader>
@@ -74,7 +74,7 @@ describe('PancakeV3Pool gas tests', () => {
       let swapExact0For1: SwapFunction
       let swapToHigherPrice: SwapToPriceFunction
       let swapToLowerPrice: SwapToPriceFunction
-      let pool: MockTimePancakeV3Pool
+      let pool: MockTimeEldenV3Pool
       let mint: MintFunction
 
       beforeEach('load the fixture', async () => {

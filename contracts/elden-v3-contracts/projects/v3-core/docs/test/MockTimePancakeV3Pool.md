@@ -1,6 +1,6 @@
 # Solidity API
 
-## MockTimePancakeV3Pool
+## MockTimeEldenV3Pool
 
 ### time
 

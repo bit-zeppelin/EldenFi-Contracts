@@ -1,4 +1,4 @@
-import { bytecode } from '@elden/v3-core/artifacts/contracts/PancakeV3Pool.sol/PancakeV3Pool.json'
+import { bytecode } from '@elden/v3-core/artifacts/contracts/EldenV3Pool.sol/EldenV3Pool.json'
 import { utils } from 'ethers'
 
 export const POOL_BYTECODE_HASH = utils.keccak256(bytecode)

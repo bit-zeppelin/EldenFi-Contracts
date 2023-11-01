@@ -48,9 +48,5 @@ export const configs = {
     WNATIVE: '0xBCA0C8aAFb45010cD9488Edba02D2F688c41E6eD',
     nativeCurrencyLabel: 'ETH',
     v2Factory: '0xd8864CDadba883c40d3209a1E29eEF98DcA2Ed8f',
-    stableFactory: '0x3686F9F49Ce39265Bc117D81A59f6d7c612ec76B',
-    stableInfo: '0x150c8AbEB487137acCC541925408e73b92F39A50',
-    cake: '0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82',
-    smartRouterHelper: '0xdAecee3C08e953Bd5f89A5Cc90ac560413d709E3',
   },
 } as const

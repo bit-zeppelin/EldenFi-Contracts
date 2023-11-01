@@ -45,7 +45,7 @@ contract RunePoolFactory is Ownable, IRunePoolFactory {
   /****************** EVENTS ******************/
   /********************************************/
 
-  event CreateRunePool(address runeAddress);
+  event CreateRunePool(address indexed runeAddress, address owner, address nftPoolAddress, IERC20 rewardsToken1, IERC20 rewardsToken2, RunePool.Settings settings);
   event PublishRunePool(address runeAddress);
   event SetDefaultFee(uint256 fee);
   event SetFeeAddress(address feeAddress);
@@ -179,7 +179,7 @@ contract RunePoolFactory is Ownable, IRunePoolFactory {
     _runePools.add(runePool);
     _ownerRunePools[msg.sender].add(runePool);
 
-    emit CreateRunePool(runePool);
+    emit CreateRunePool(runePool, msg.sender, nftPoolAddress, rewardsToken1, rewardsToken2, settings);
   }
 
   /**

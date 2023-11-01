@@ -149,8 +149,7 @@ async function main() {
     artifacts.EldenStableSwapInfo.bytecode,
     owner
   )
-  const eldenStableSwapInfo = await EldenStableSwapInfo.deploy(
-  )
+  const eldenStableSwapInfo = await EldenStableSwapInfo.deploy()
 
 
 

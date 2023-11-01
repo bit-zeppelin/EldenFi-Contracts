@@ -5,8 +5,8 @@ import './interfaces/IEldenV3Factory.sol';
 import "./interfaces/IEldenV3PoolDeployer.sol";
 import './interfaces/IEldenV3Pool.sol';
 
-/// @title Canonical PancakeSwap V3 factory
-/// @notice Deploys PancakeSwap V3 pools and manages ownership and control over pool protocol fees
+/// @title Canonical EldenSwap V3 factory
+/// @notice Deploys EldenSwap V3 pools and manages ownership and control over pool protocol fees
 contract EldenV3Factory is IEldenV3Factory {
     /// @inheritdoc IEldenV3Factory
     address public override owner;

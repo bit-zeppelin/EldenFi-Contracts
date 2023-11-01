@@ -3,5 +3,6 @@
   "EldenStableSwapTwoPoolDeployer": "0x35099ac29302dF69562bB541b0955738A399AF98",
   "EldenStableSwapThreePoolDeployer": "0x8694847eD9F874917B9a9D4c3D57f37fEf24ca21",
   "EldenStableSwapFactory": "0x0aD991a227925E4f12272Fd1D298cEB61338b68e",
-  "EldenStableSwapTwoPoolInfo": "0xF2dEaD06589A23F61a16B44aCFfcce6382b3aBE7"
+  "EldenStableSwapTwoPoolInfo": "0xF2dEaD06589A23F61a16B44aCFfcce6382b3aBE7",    
+  "EldenStableSwapInfo": "0x04b9C4AA5a01CdA7C3518Bf5D63580179256c1cA"
 }

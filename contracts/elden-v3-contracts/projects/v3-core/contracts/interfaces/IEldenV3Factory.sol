@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity >=0.5.0;
 
-/// @title The interface for the PancakeSwap V3 Factory
-/// @notice The PancakeSwap V3 Factory facilitates creation of PancakeSwap V3 pools and control over the protocol fees
+/// @title The interface for the EldenSwap V3 Factory
+/// @notice The EldenSwap V3 Factory facilitates creation of EldenSwap V3 pools and control over the protocol fees
 interface IEldenV3Factory {
     struct TickSpacingExtraInfo {
         bool whitelistRequested;

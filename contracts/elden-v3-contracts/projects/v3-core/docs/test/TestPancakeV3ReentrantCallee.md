@@ -1,6 +1,6 @@
 # Solidity API
 
-## TestPancakeV3ReentrantCallee
+## TestEldenV3ReentrantCallee
 
 ### swapToReenter
 
@@ -8,9 +8,9 @@
 function swapToReenter(address pool) external
 ```
 
-### pancakeV3SwapCallback
+### eldenV3SwapCallback
 
 ```solidity
-function pancakeV3SwapCallback(int256, int256, bytes) external
+function eldenV3SwapCallback(int256, int256, bytes) external
 ```
 
