@@ -961,10 +961,6 @@ contract FairAuction is Ownable, ReentrancyGuard {
     require(startTime < endTime, "invalid dates");
     require(treasury_ != address(0), "invalid treasury");
 
-    saleToken.approve(owner(), ~uint256(0));
-    projectToken.approve(owner(), ~uint256(0));
-    projectToken2.approve(owner(), ~uint256(0));
-
     PROJECT_TOKEN = projectToken;
     PROJECT_TOKEN_2 = projectToken2;
     SALE_TOKEN = saleToken;

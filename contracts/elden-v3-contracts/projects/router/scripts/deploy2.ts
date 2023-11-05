@@ -21,16 +21,16 @@ async function main() {
   const positionManager_address = v3PeripheryDeployedContracts.NonfungiblePositionManager
 
   const smartRouterHelper = {
-    address: '0x8650cc862764767a1E9Cad61Ae1F890dA0539D6c'
+    address: '0xFa79d4e7c5783dD2186d3873Deb167180559068c'
   }
   const smartRouter = {
-    address: '0x33De4584Cee28D49597cDe5aEf5630d65B342B72'
+    address: '0x21Ed19877652D920e5C93929fecaf82e240d2D30'
   }
   const mixedRouteQuoterV1 = {
-    address: '0x98299B9B449509aB15fCf13EA84b49e6AdDf91bb'
+    address: '0xdBC860887233C9C9A841D62aa88A5f699B16a277'
   }
   const quoterV2 = {
-    address: '0xFC704a7792914ABe00238e0822B7F3B5967dEe96'
+    address: '0x7e1ef0285372Ff524048A5ca397fFDAD021ee6CF'
   }
 
   // /** SmartRouterHelper */
