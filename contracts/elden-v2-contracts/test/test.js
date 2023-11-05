@@ -9,7 +9,7 @@ const EldenPair = artifacts.require("./EldenPair.sol");
 const EldenRouter = artifacts.require("./EldenRouter.sol");
 const EldenZapV1 = artifacts.require("./EldenZapV1.sol");
 const PositionHelper = artifacts.require("./PositionHelper.sol");
-const WETH = artifacts.require("./WBNB.sol");
+const WETH = artifacts.require("./WETH.sol");
 
 contract("EldenRouter", ([alice, bob, carol, david, erin]) => {
   let maxZapReverseRatio;
