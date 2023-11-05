@@ -402,7 +402,7 @@ contract EldenStableSwapInfo {
         uint256 i
     ) external view returns (uint256 adminFee) {
         IEldenStableSwap swap = IEldenStableSwap(_swap);
-        (uint256 dy, uint256 dy_fee) = _calc_withdraw_one_coin(_swap, _token_amount, i);
+        (, uint256 dy_fee) = _calc_withdraw_one_coin(_swap, _token_amount, i);
         adminFee = (dy_fee * swap.admin_fee()) / FEE_DENOMINATOR;
     }
 }

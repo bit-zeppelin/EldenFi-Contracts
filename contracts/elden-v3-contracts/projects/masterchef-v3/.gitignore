@@ -1,8 +1,0 @@
-node_modules/
-**/artifacts/
-**/cache/
-**/abi
-**/typechain
-.idea
-.vscode
-.DS_Store

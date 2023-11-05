@@ -26,8 +26,4 @@ await $`yarn workspace @elden/stableswap run hardhat run scripts/verify.ts --net
 
 // await $`yarn workspace @elden/smart-router run hardhat run scripts/verify.ts --network ${network}`
 
-// await $`yarn workspace @elden/masterchef-v3 run hardhat run scripts/verify.ts --network ${network}`
-
-// await $`yarn workspace @elden/v3-lm-pool run hardhat run scripts/verify.ts --network ${network}`
-
 console.log(chalk.blue('Done!'))

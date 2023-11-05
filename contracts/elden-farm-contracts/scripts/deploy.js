@@ -4,11 +4,11 @@ const { ethers, upgrades } = require("hardhat");
 async function main() {
 
   const config = {
-    treasuryAddress: "0x3745dfc48dCffBCD47AD6BA3B9a3Db66787002eC",
-    startTime: 1698484735
+    treasuryAddress: "0xBEdD5546E9f70c226f234DE322d34408cA47134C",
+    startTime: 1699216553
   }
   const weth = {
-    address: '0xbca0c8aafb45010cd9488edba02d2f688c41e6ed'
+    address: '0x06c2e7C81798a00eCc4892829884A3797C06116B'
   }
   // const eldenToken = {
   //   address: '0x4815204D490F4300183E61A9C6b273D62191F7Cd'
@@ -22,9 +22,9 @@ async function main() {
 
   const EldenToken = await ethers.getContractFactory("EldenToken");
   const eldenToken = await EldenToken.deploy(
-    ethers.utils.parseEther("2000000"), // max supply
-    ethers.utils.parseEther("1000000"), // initial rate
-    ethers.utils.parseEther("0.1"), // emission rate
+    ethers.utils.parseEther("1000000"), // max supply
+    ethers.utils.parseEther("500000"), // initial rate
+    ethers.utils.parseEther("0.01"), // emission rate
     config.treasuryAddress // treasury address
   );
   await eldenToken.deployed()

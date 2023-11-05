@@ -29,8 +29,7 @@ library EldenLibrary {
                         hex"ff",
                         factory,
                         keccak256(abi.encodePacked(token0, token1)),
-                        hex"ffa2c5f53dc3f7b5a48255dfa2ea6a8429535c365cbec5308a761d92c2cb9775"
-                        // hex"a5934690703a592a07e841ca29d5e5c79b5e22ed4749057bb216dc31100be1c0" // init code hash
+                        hex"a77338a670355a25835169ec547a0a471e496d599de57fb966afe49b5a03a5c3"
                     )
                 )
             )

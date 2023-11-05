@@ -1,5 +1,5 @@
 {
-  "name": "pancake-v3",
+  "name": "elden-v3",
   "private": true,
   "workspaces": [
     "projects/*",

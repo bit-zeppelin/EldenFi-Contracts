@@ -20,30 +20,43 @@ async function main() {
   const eldenV3Factory_address = v3DeployedContracts.EldenV3Factory
   const positionManager_address = v3PeripheryDeployedContracts.NonfungiblePositionManager
 
-  /** SmartRouterHelper */
-  console.log('Deploying SmartRouterHelper...')
-  const SmartRouterHelper = await ethers.getContractFactory('SmartRouterHelper')
-  const smartRouterHelper = await SmartRouterHelper.deploy()
-  console.log('SmartRouterHelper deployed to:', smartRouterHelper.address)
-  // await tryVerify(smartRouterHelper)
+  const smartRouterHelper = {
+    address: '0x8650cc862764767a1E9Cad61Ae1F890dA0539D6c'
+  }
+  const smartRouter = {
+    address: '0x33De4584Cee28D49597cDe5aEf5630d65B342B72'
+  }
+  const mixedRouteQuoterV1 = {
+    address: '0x98299B9B449509aB15fCf13EA84b49e6AdDf91bb'
+  }
+  const quoterV2 = {
+    address: '0xFC704a7792914ABe00238e0822B7F3B5967dEe96'
+  }
 
-  /** SmartRouter */
-  console.log('Deploying SmartRouter...')
-  const SmartRouter = await ethers.getContractFactory('SmartRouter', {
-    libraries: {
-      SmartRouterHelper: smartRouterHelper.address,
-    },
-  })
-  const smartRouter = await SmartRouter.deploy(
-    config.v2Factory,
-    eldenV3PoolDeployer_address,
-    eldenV3Factory_address,
-    positionManager_address,
-    stableSwapDeployedContracts.EldenStableSwapFactory,
-    stableSwapDeployedContracts.EldenStableSwapTwoPoolInfo,
-    config.WNATIVE
-  )
-  console.log('SmartRouter deployed to:', smartRouter.address)
+  // /** SmartRouterHelper */
+  // console.log('Deploying SmartRouterHelper...')
+  // const SmartRouterHelper = await ethers.getContractFactory('SmartRouterHelper')
+  // const smartRouterHelper = await SmartRouterHelper.deploy()
+  // console.log('SmartRouterHelper deployed to:', smartRouterHelper.address)
+  // // // await tryVerify(smartRouterHelper)
+
+  // /** SmartRouter */
+  // console.log('Deploying SmartRouter...')
+  // const SmartRouter = await ethers.getContractFactory('SmartRouter', {
+  //   libraries: {
+  //     SmartRouterHelper: smartRouterHelper.address,
+  //   },
+  // })
+  // const smartRouter = await SmartRouter.deploy(
+  //   config.v2Factory,
+  //   eldenV3PoolDeployer_address,
+  //   eldenV3Factory_address,
+  //   positionManager_address,
+  //   stableSwapDeployedContracts.EldenStableSwapFactory,
+  //   stableSwapDeployedContracts.EldenStableSwapTwoPoolInfo,
+  //   config.WNATIVE
+  // )
+  // console.log('SmartRouter deployed to:', smartRouter.address)
 
   // await tryVerify(smartRouter, [
   //   config.v2Factory,
@@ -55,20 +68,20 @@ async function main() {
   //   config.WNATIVE,
   // ])
 
-  /** MixedRouteQuoterV1 */
-  const MixedRouteQuoterV1 = await ethers.getContractFactory('MixedRouteQuoterV1', {
-    libraries: {
-      SmartRouterHelper: smartRouterHelper.address,
-    },
-  })
-  const mixedRouteQuoterV1 = await MixedRouteQuoterV1.deploy(
-    eldenV3PoolDeployer_address,
-    eldenV3Factory_address,
-    config.v2Factory,
-    stableSwapDeployedContracts.EldenStableSwapFactory,
-    config.WNATIVE
-  )
-  console.log('MixedRouteQuoterV1 deployed to:', mixedRouteQuoterV1.address)
+  // /** MixedRouteQuoterV1 */
+  // const MixedRouteQuoterV1 = await ethers.getContractFactory('MixedRouteQuoterV1', {
+  //   libraries: {
+  //     SmartRouterHelper: smartRouterHelper.address,
+  //   },
+  // })
+  // const mixedRouteQuoterV1 = await MixedRouteQuoterV1.deploy(
+  //   eldenV3PoolDeployer_address,
+  //   eldenV3Factory_address,
+  //   config.v2Factory,
+  //   stableSwapDeployedContracts.EldenStableSwapFactory,
+  //   config.WNATIVE
+  // )
+  // console.log('MixedRouteQuoterV1 deployed to:', mixedRouteQuoterV1.address)
 
   // await tryVerify(mixedRouteQuoterV1, [
   //   eldenV3PoolDeployer_address,
@@ -78,14 +91,14 @@ async function main() {
   //   config.WNATIVE,
   // ])
 
-  /** QuoterV2 */
-  const QuoterV2 = await ethers.getContractFactory('QuoterV2', {
-    libraries: {
-      SmartRouterHelper: smartRouterHelper.address,
-    },
-  })
-  const quoterV2 = await QuoterV2.deploy(eldenV3PoolDeployer_address, eldenV3Factory_address, config.WNATIVE)
-  console.log('QuoterV2 deployed to:', quoterV2.address)
+  // /** QuoterV2 */
+  // const QuoterV2 = await ethers.getContractFactory('QuoterV2', {
+  //   libraries: {
+  //     SmartRouterHelper: smartRouterHelper.address,
+  //   },
+  // })
+  // const quoterV2 = await QuoterV2.deploy(eldenV3PoolDeployer_address, eldenV3Factory_address, config.WNATIVE)
+  // console.log('QuoterV2 deployed to:', quoterV2.address)
 
   // await tryVerify(quoterV2, [eldenV3PoolDeployer_address, eldenV3Factory_address, config.WNATIVE])
 

@@ -26,26 +26,18 @@ await $`yarn workspace @elden/v3-periphery run hardhat run scripts/deploy2.ts --
 
 await $`yarn workspace @elden/smart-router run hardhat run scripts/deploy2.ts --network ${network}`
 
-await $`yarn workspace @elden/masterchef-v3 run hardhat run scripts/deploy2.ts --network ${network}`
-
-await $`yarn workspace @elden/v3-lm-pool run hardhat run scripts/deploy2.ts --network ${network}`
-
 console.log(chalk.blue('Done!'))
 
-const m = await fs.readJson(`./projects/masterchef-v3/deployments/${network}.json`)
 const s = await fs.readJson(`./projects/stableswap/deployments/${network}.json`)
 const r = await fs.readJson(`./projects/router/deployments/${network}.json`)
 const c = await fs.readJson(`./projects/v3-core/deployments/${network}.json`)
 const p = await fs.readJson(`./projects/v3-periphery/deployments/${network}.json`)
-const l = await fs.readJson(`./projects/v3-lm-pool/deployments/${network}.json`)
 
 const addresses = {
-  ...m,
   ...s,
   ...r,
   ...c,
   ...p,
-  ...l,
 }
 
 console.log(chalk.blue('Writing to file...'))

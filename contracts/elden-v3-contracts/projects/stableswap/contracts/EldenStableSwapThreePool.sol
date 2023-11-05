@@ -22,8 +22,8 @@ contract EldenStableSwapThreePool is Ownable, ReentrancyGuard {
     uint256 public constant MAX_FEE = 5e9;
     uint256 public constant MAX_A = 1e6;
     uint256 public constant MAX_A_CHANGE = 10;
-    uint256 public constant MIN_BNB_GAS = 2300;
-    uint256 public constant MAX_BNB_GAS = 23000;
+    uint256 public constant MIN_ETH_GAS = 2300;
+    uint256 public constant MAX_ETH_GAS = 23000;
 
     uint256 public constant ADMIN_ACTIONS_DELAY = 3 days;
     uint256 public constant MIN_RAMP_TIME = 1 days;
@@ -32,13 +32,13 @@ contract EldenStableSwapThreePool is Ownable, ReentrancyGuard {
     uint256[N_COINS] public balances;
     uint256 public fee; // fee * 1e10.
     uint256 public admin_fee; // admin_fee * 1e10.
-    uint256 public bnb_gas = 4029; // transfer bnb gas.
+    uint256 public eth_gas = 4029; // transfer eth gas.
 
     IEldenStableSwapLP public token;
 
-    address constant BNB_ADDRESS = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+    address constant ETH_ADDRESS = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
 
-    bool support_BNB;
+    bool support_ETH;
 
     uint256 public initial_A;
     uint256 public future_A;
@@ -88,7 +88,7 @@ contract EldenStableSwapThreePool is Ownable, ReentrancyGuard {
     event NewFee(uint256 fee, uint256 admin_fee);
     event RampA(uint256 old_A, uint256 new_A, uint256 initial_time, uint256 future_time);
     event StopRampA(uint256 A, uint256 t);
-    event SetBNBGas(uint256 bnb_gas);
+    event SetETHGas(uint256 eth_gas);
     event RevertParameters();
     event DonateAdminFees();
     event Kill();
@@ -127,9 +127,9 @@ contract EldenStableSwapThreePool is Ownable, ReentrancyGuard {
         for (uint256 i = 0; i < N_COINS; i++) {
             require(_coins[i] != address(0), "ZERO Address");
             uint256 coinDecimal;
-            if (_coins[i] == BNB_ADDRESS) {
+            if (_coins[i] == ETH_ADDRESS) {
                 coinDecimal = 18;
-                support_BNB = true;
+                support_ETH = true;
             } else {
                 coinDecimal = IERC20Metadata(_coins[i]).decimals();
             }
@@ -268,8 +268,8 @@ contract EldenStableSwapThreePool is Ownable, ReentrancyGuard {
     function add_liquidity(uint256[N_COINS] memory amounts, uint256 min_mint_amount) external payable nonReentrant {
         //Amounts is amounts of c-tokens
         require(!is_killed, "Killed");
-        if (!support_BNB) {
-            require(msg.value == 0, "Inconsistent quantity"); // Avoid sending BNB by mistake.
+        if (!support_ETH) {
+            require(msg.value == 0, "Inconsistent quantity"); // Avoid sending ETH by mistake.
         }
         uint256[N_COINS] memory fees;
         uint256 _fee = (fee * N_COINS) / (4 * (N_COINS - 1));
@@ -429,8 +429,8 @@ contract EldenStableSwapThreePool is Ownable, ReentrancyGuard {
         uint256 min_dy
     ) external payable nonReentrant {
         require(!is_killed, "Killed");
-        if (!support_BNB) {
-            require(msg.value == 0, "Inconsistent quantity"); // Avoid sending BNB by mistake.
+        if (!support_ETH) {
+            require(msg.value == 0, "Inconsistent quantity"); // Avoid sending ETH by mistake.
         }
 
         uint256[N_COINS] memory old_balances = balances;
@@ -455,7 +455,7 @@ contract EldenStableSwapThreePool is Ownable, ReentrancyGuard {
         balances[j] = old_balances[j] - dy - dy_admin_fee;
 
         address iAddress = coins[i];
-        if (iAddress == BNB_ADDRESS) {
+        if (iAddress == ETH_ADDRESS) {
             require(dx == msg.value, "Inconsistent quantity");
         } else {
             IERC20(iAddress).safeTransferFrom(msg.sender, address(this), dx);
@@ -642,32 +642,32 @@ contract EldenStableSwapThreePool is Ownable, ReentrancyGuard {
     }
 
     function transfer_out(address coin_address, uint256 value) internal {
-        if (coin_address == BNB_ADDRESS) {
-            _safeTransferBNB(msg.sender, value);
+        if (coin_address == ETH_ADDRESS) {
+            _safeTransferETH(msg.sender, value);
         } else {
             IERC20(coin_address).safeTransfer(msg.sender, value);
         }
     }
 
     function transfer_in(address coin_address, uint256 value) internal {
-        if (coin_address == BNB_ADDRESS) {
+        if (coin_address == ETH_ADDRESS) {
             require(value == msg.value, "Inconsistent quantity");
         } else {
             IERC20(coin_address).safeTransferFrom(msg.sender, address(this), value);
         }
     }
 
-    function _safeTransferBNB(address to, uint256 value) internal {
-        (bool success, ) = to.call{gas: bnb_gas, value: value}("");
-        require(success, "BNB transfer failed");
+    function _safeTransferETH(address to, uint256 value) internal {
+        (bool success, ) = to.call{gas: eth_gas, value: value}("");
+        require(success, "ETH transfer failed");
     }
 
     // Admin functions
 
-    function set_bnb_gas(uint256 _bnb_gas) external onlyOwner {
-        require(_bnb_gas >= MIN_BNB_GAS && _bnb_gas <= MAX_BNB_GAS, "Illegal gas");
-        bnb_gas = _bnb_gas;
-        emit SetBNBGas(_bnb_gas);
+    function set_eth_gas(uint256 _eth_gas) external onlyOwner {
+        require(_eth_gas >= MIN_ETH_GAS && _eth_gas <= MAX_ETH_GAS, "Illegal gas");
+        eth_gas = _eth_gas;
+        emit SetETHGas(_eth_gas);
     }
 
     function ramp_A(uint256 _future_A, uint256 _future_time) external onlyOwner {
@@ -729,7 +729,7 @@ contract EldenStableSwapThreePool is Ownable, ReentrancyGuard {
     }
 
     function admin_balances(uint256 i) external view returns (uint256) {
-        if (coins[i] == BNB_ADDRESS) {
+        if (coins[i] == ETH_ADDRESS) {
             return address(this).balance - balances[i];
         } else {
             return IERC20(coins[i]).balanceOf(address(this)) - balances[i];
@@ -739,7 +739,7 @@ contract EldenStableSwapThreePool is Ownable, ReentrancyGuard {
     function withdraw_admin_fees() external onlyOwner {
         for (uint256 i = 0; i < N_COINS; i++) {
             uint256 value;
-            if (coins[i] == BNB_ADDRESS) {
+            if (coins[i] == ETH_ADDRESS) {
                 value = address(this).balance - balances[i];
             } else {
                 value = IERC20(coins[i]).balanceOf(address(this)) - balances[i];
@@ -752,7 +752,7 @@ contract EldenStableSwapThreePool is Ownable, ReentrancyGuard {
 
     function donate_admin_fees() external onlyOwner {
         for (uint256 i = 0; i < N_COINS; i++) {
-            if (coins[i] == BNB_ADDRESS) {
+            if (coins[i] == ETH_ADDRESS) {
                 balances[i] = address(this).balance;
             } else {
                 balances[i] = IERC20(coins[i]).balanceOf(address(this));
