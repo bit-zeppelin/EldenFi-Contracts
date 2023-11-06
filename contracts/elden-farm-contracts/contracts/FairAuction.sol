@@ -950,7 +950,7 @@ contract FairAuction is Ownable, ReentrancyGuard {
 
   bool public forceClaimable; // safety measure to ensure that we can force claimable to true in case awaited LP token address plan change during the sale
 
-  address public weth = 0xBCA0C8aAFb45010cD9488Edba02D2F688c41E6eD;
+  address public weth = 0x06c2e7C81798a00eCc4892829884A3797C06116B;
 
 
   constructor(

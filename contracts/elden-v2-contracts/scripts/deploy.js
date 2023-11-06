@@ -18,18 +18,18 @@ const main = async () => {
     address: "0x06c2e7C81798a00eCc4892829884A3797C06116B"
   }
 
-  const eldenFactory = {
-    address: "0xFf3a14ba6c2b7e28b58FD8bF5169F274B9561aB0"
-  }
+  // const eldenFactory = {
+  //   address: "0xFf3a14ba6c2b7e28b58FD8bF5169F274B9561aB0"
+  // }
 
   // Deploy EldenFactory
-  // console.log("Deploying EldenFactory..");
-  // const EldenFactory = await ethers.getContractFactory("EldenFactory");
-  // const eldenFactory = await EldenFactory.deploy(
-  //   config.treasuryAddress // fee to address
-  // );
-  // await eldenFactory.deployed();
-  // console.log("EldenFactory:", eldenFactory.address);
+  console.log("Deploying EldenFactory..");
+  const EldenFactory = await ethers.getContractFactory("EldenFactory");
+  const eldenFactory = await EldenFactory.deploy(
+    config.treasuryAddress // fee to address
+  );
+  await eldenFactory.deployed();
+  console.log("EldenFactory:", eldenFactory.address);
 
   
   // Deploy EldenRouter

@@ -15,10 +15,6 @@ describe("Test Token", async function () {
 
     });
     
-    it("Deposit ETH/stETH and mint caUSD", async function () {
-
-    });
-
     it("Staking lp", async function () {
         
     });
