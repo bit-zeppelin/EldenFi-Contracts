@@ -174,6 +174,18 @@ module.exports = {
     localhost: {
       url: "http://127.0.0.1:8545"
     },
+    base: {
+      url: "https://mainnet.base.org",
+      chainId: 8453,
+      accounts: [process.env.PRIVATE_KEY],
+      gasPrice: 1000000000,
+    },
+    baseGoerli: {
+      url: "https://goerli.base.org",
+      chainId: 84531,
+      accounts: [process.env.PRIVATE_KEY],
+      gasPrice: 1000000000,
+    },
     scrollSepolia: {
       url: "https://sepolia-rpc.scroll.io",
       chainId: 534351,

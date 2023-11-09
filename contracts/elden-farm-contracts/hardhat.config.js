@@ -115,6 +115,15 @@ module.exports = {
         },
       },
       {
+        version: "0.8.18",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200
+          }
+        },
+      },
+      {
         version: "0.8.4",
         settings: {
           optimizer: {
@@ -169,6 +178,18 @@ module.exports = {
       url: "https://sepolia-rpc.scroll.io",
       chainId: 534351,
       accounts: [process.env.PRIVATE_KEY],
+    },
+    base: {
+      url: "https://mainnet.base.org",
+      chainId: 8453,
+      accounts: [process.env.PRIVATE_KEY],
+      gasPrice: 1000000000,
+    },
+    baseGoerli: {
+      url: "https://goerli.base.org",
+      chainId: 84531,
+      accounts: [process.env.PRIVATE_KEY],
+      gasPrice: 1000000000,
     },
     fuji: {
       url: "https://api.avax-test.network/ext/bc/C/rpc",
@@ -294,6 +315,22 @@ module.exports = {
         urls: {
           apiURL: 'https://api-sepolia.scrollscan.com/api',
           browserURL: 'https://sepolia.scrollscan.com/',
+        },
+      },
+      {
+        network: 'baseGoerli',
+        chainId: 84531,
+        urls: {
+          apiURL: 'https://api-goerli.basescan.org/api',
+          browserURL: 'https://basescan.org/',
+        },
+      },
+      {
+        network: 'base',
+        chainId: 84531,
+        urls: {
+          apiURL: 'https://api.basescan.org/api',
+          browserURL: 'https://goerli.basescan.org/',
         },
       },
       {

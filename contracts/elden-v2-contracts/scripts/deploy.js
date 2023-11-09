@@ -4,18 +4,18 @@ const main = async () => {
   // Compile contracts
   
 
-  // Deploy WETH
-  // const WETH = await ethers.getContractFactory("WETH");
-  // const weth = await WETH.deploy();
-  // await weth.deployed();
-  // console.log("WETH deployed to:", weth.address);
+  // Deploy Hash Test
+  const HashTest = await ethers.getContractFactory("HashTest");
+  const hashTest = await HashTest.deploy();
+  await hashTest.deployed();
+  console.log("hashTest deployed to:", hashTest.address);
 
   const config = {
     treasuryAddress: "0xBEdD5546E9f70c226f234DE322d34408cA47134C",
     startTime: 1699216553
   }
   const weth = {
-    address: "0x06c2e7C81798a00eCc4892829884A3797C06116B"
+    address: "0x3e29b4AFcddb996715BF7E008D216A1eF4d20ec8"
   }
 
   // const eldenFactory = {

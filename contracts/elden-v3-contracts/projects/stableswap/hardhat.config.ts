@@ -80,6 +80,20 @@ const scrollSepolia: NetworkUserConfig = {
   accounts: [process.env.KEY_SCROLL_SEPOLIA!],
 }
 
+const base: NetworkUserConfig = {
+  url: "https://mainnet.base.org",
+  chainId: 8453,
+  gasPrice: 1000000000,
+  accounts: [process.env.KEY_SCROLL_SEPOLIA!],
+}
+
+const baseGoerli: NetworkUserConfig = {
+  url: "https://goerli.base.org",
+  chainId: 84531,
+  gasPrice: 1000000000,
+  accounts: [process.env.KEY_SCROLL_SEPOLIA!],
+}
+
 export default {
   networks: {
     hardhat: {
@@ -90,7 +104,8 @@ export default {
     ...(process.env.KEY_GOERLI && { goerli }),
     ...(process.env.KEY_ETH && { eth }),
     ...(process.env.KEY_SCROLL_SEPOLIA && { scrollSepolia }),
-    mainnet: scrollSepolia,
+    ...(process.env.KEY_SCROLL_SEPOLIA && { baseGoerli }),
+    mainnet: baseGoerli,
   },
   etherscan: {
     apiKey: {

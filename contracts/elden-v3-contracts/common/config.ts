@@ -49,4 +49,9 @@ export const configs = {
     nativeCurrencyLabel: 'ETH',
     v2Factory: '0xFf3a14ba6c2b7e28b58FD8bF5169F274B9561aB0',
   },
+  baseGoerli: {
+    WNATIVE: '0x3e29b4AFcddb996715BF7E008D216A1eF4d20ec8',
+    nativeCurrencyLabel: 'ETH',
+    v2Factory: '0x5ea8Aee369F49b3835584823cF2478354aa7Dd09',
+  },
 } as const

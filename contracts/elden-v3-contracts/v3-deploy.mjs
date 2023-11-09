@@ -10,6 +10,7 @@ const networks = {
   bscTestnet: 'bscTestnet',
   hardhat: 'hardhat',
   scrollSepolia: 'scrollSepolia',
+  baseGoerli: 'baseGoerli',
 }
 
 let network = process.env.NETWORK

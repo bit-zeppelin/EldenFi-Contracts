@@ -13,6 +13,7 @@ const artifacts: { [name: string]: ContractJson } = {
   TickLens: require('../artifacts/contracts/lens/TickLens.sol/TickLens.json'),
   V3Migrator: require('../artifacts/contracts/V3Migrator.sol/V3Migrator.json'),
   EldenInterfaceMulticall: require('../artifacts/contracts/lens/EldenInterfaceMulticall.sol/EldenInterfaceMulticall.json'),
+  EldenInterfaceMulticallV2: require('../artifacts/contracts/lens/EldenInterfaceMulticallV2.sol/EldenInterfaceMulticallV2.json'),
   // eslint-disable-next-line global-require
   SwapRouter: require('../artifacts/contracts/SwapRouter.sol/SwapRouter.json'),
   // eslint-disable-next-line global-require
@@ -68,67 +69,78 @@ async function main() {
   const eldenV3PoolDeployer_address = deployedContracts.EldenV3PoolDeployer
   const eldenV3Factory_address = deployedContracts.EldenV3Factory
 
-  // const SwapRouter = new ContractFactory(artifacts.SwapRouter.abi, artifacts.SwapRouter.bytecode, owner)
-  // const swapRouter = await SwapRouter.deploy(eldenV3PoolDeployer_address, eldenV3Factory_address, config.WNATIVE)
-  // sleep(100)
+  const SwapRouter = new ContractFactory(artifacts.SwapRouter.abi, artifacts.SwapRouter.bytecode, owner)
+  const swapRouter = await SwapRouter.deploy(eldenV3PoolDeployer_address, eldenV3Factory_address, config.WNATIVE)
+  sleep(100)
 
-  // // await tryVerify(swapRouter, [eldenV3PoolDeployer_address, eldenV3Factory_address, config.WNATIVE])
-  // console.log('swapRouter', swapRouter.address)
+  // await tryVerify(swapRouter, [eldenV3PoolDeployer_address, eldenV3Factory_address, config.WNATIVE])
+  console.log('swapRouter', swapRouter.address)
 
-  // // off chain version
-  // const NonfungibleTokenPositionDescriptor = new ContractFactory(
-  //   artifacts.NonfungibleTokenPositionDescriptorOffChain.abi,
-  //   artifacts.NonfungibleTokenPositionDescriptorOffChain.bytecode,
-  //   owner
-  // )
-  // const baseTokenUri = 'https://nft.blockgames.com/dice/'
-  // const nonfungibleTokenPositionDescriptor = await upgrades.deployProxy(NonfungibleTokenPositionDescriptor, [
-  //   baseTokenUri,
-  // ])
-  // await nonfungibleTokenPositionDescriptor.deployed()
-  // sleep(100)
-  // console.log('nonfungibleTokenPositionDescriptor', nonfungibleTokenPositionDescriptor.address)
+  // off chain version
+  const NonfungibleTokenPositionDescriptor = new ContractFactory(
+    artifacts.NonfungibleTokenPositionDescriptorOffChain.abi,
+    artifacts.NonfungibleTokenPositionDescriptorOffChain.bytecode,
+    owner
+  )
+  const baseTokenUri = 'https://nft.blockgames.com/dice/'
+  const nonfungibleTokenPositionDescriptor = await upgrades.deployProxy(NonfungibleTokenPositionDescriptor, [
+    baseTokenUri,
+  ])
+  await nonfungibleTokenPositionDescriptor.deployed()
+  sleep(100)
+  console.log('nonfungibleTokenPositionDescriptor', nonfungibleTokenPositionDescriptor.address)
 
-  // // await tryVerify(nonfungibleTokenPositionDescriptor)
+  // await tryVerify(nonfungibleTokenPositionDescriptor)
 
-  // const NonfungiblePositionManager = new ContractFactory(
-  //   artifacts.NonfungiblePositionManager.abi,
-  //   artifacts.NonfungiblePositionManager.bytecode,
-  //   owner
-  // )
-  // const nonfungiblePositionManager = await NonfungiblePositionManager.deploy(
-  //   eldenV3PoolDeployer_address,
-  //   eldenV3Factory_address,
-  //   config.WNATIVE,
-  //   nonfungibleTokenPositionDescriptor.address
-  // )
-  // sleep(100)
+  const NonfungiblePositionManager = new ContractFactory(
+    artifacts.NonfungiblePositionManager.abi,
+    artifacts.NonfungiblePositionManager.bytecode,
+    owner
+  )
+  const nonfungiblePositionManager = await NonfungiblePositionManager.deploy(
+    eldenV3PoolDeployer_address,
+    eldenV3Factory_address,
+    config.WNATIVE,
+    nonfungibleTokenPositionDescriptor.address
+  )
+  sleep(100)
 
-  // console.log('nonfungiblePositionManager', nonfungiblePositionManager.address)
+  console.log('nonfungiblePositionManager', nonfungiblePositionManager.address)
 
-  // const EldenInterfaceMulticall = new ContractFactory(
-  //   artifacts.EldenInterfaceMulticall.abi,
-  //   artifacts.EldenInterfaceMulticall.bytecode,
-  //   owner
-  // )
+  const EldenInterfaceMulticall = new ContractFactory(
+    artifacts.EldenInterfaceMulticall.abi,
+    artifacts.EldenInterfaceMulticall.bytecode,
+    owner
+  )
 
-  // const eldenInterfaceMulticall = await EldenInterfaceMulticall.deploy()
-  // sleep(100)
-  // console.log('EldenInterfaceMulticall', eldenInterfaceMulticall.address)
+  const eldenInterfaceMulticall = await EldenInterfaceMulticall.deploy()
+  sleep(100)
+  console.log('EldenInterfaceMulticall', eldenInterfaceMulticall.address)
 
+  const EldenInterfaceMulticallV2 = new ContractFactory(
+    artifacts.EldenInterfaceMulticallV2.abi,
+    artifacts.EldenInterfaceMulticallV2.bytecode,
+    owner
+  )
+
+  const eldenInterfaceMulticallV2 = await EldenInterfaceMulticallV2.deploy()
+  sleep(100)
+  console.log('EldenInterfaceMulticallV2', eldenInterfaceMulticallV2.address)
   // await tryVerify(eldenInterfaceMulticall)
-  const swapRouter = {
-    address: '0x8055CA3e1f13661Be73860DBC0c56602dA9A6150'
-  }
-  const nonfungibleTokenPositionDescriptor =  {
-    address: '0xF183E27623c57BD498EA332e7e7a10877CAc6AcB'
-  }
-  const nonfungiblePositionManager =  {
-    address: '0xA06Fa05469bD8aa31163f53a1C87591F602e1688'
-  }
-  const eldenInterfaceMulticall =  {
-    address: '0x0bc337154a4551CeD1b1Bb2e164854fF17e6aE90'
-  }
+
+  
+  // const swapRouter = {
+  //   address: '0x8055CA3e1f13661Be73860DBC0c56602dA9A6150'
+  // }
+  // const nonfungibleTokenPositionDescriptor =  {
+  //   address: '0xF183E27623c57BD498EA332e7e7a10877CAc6AcB'
+  // }
+  // const nonfungiblePositionManager =  {
+  //   address: '0xA06Fa05469bD8aa31163f53a1C87591F602e1688'
+  // }
+  // const eldenInterfaceMulticall =  {
+  //   address: '0x0bc337154a4551CeD1b1Bb2e164854fF17e6aE90'
+  // }
 
   const V3Migrator = new ContractFactory(artifacts.V3Migrator.abi, artifacts.V3Migrator.bytecode, owner)
   const v3Migrator = await V3Migrator.deploy(
@@ -162,6 +174,7 @@ async function main() {
     NonfungibleTokenPositionDescriptor: nonfungibleTokenPositionDescriptor.address,
     NonfungiblePositionManager: nonfungiblePositionManager.address,
     EldenInterfaceMulticall: eldenInterfaceMulticall.address,
+    EldenInterfaceMulticallV2: eldenInterfaceMulticallV2.address,
   }
 
   fs.writeFileSync(`./deployments/${networkName}.json`, JSON.stringify(contracts, null, 2))

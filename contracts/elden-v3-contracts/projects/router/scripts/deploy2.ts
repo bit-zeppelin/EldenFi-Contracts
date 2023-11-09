@@ -20,12 +20,12 @@ async function main() {
   const eldenV3Factory_address = v3DeployedContracts.EldenV3Factory
   const positionManager_address = v3PeripheryDeployedContracts.NonfungiblePositionManager
 
-  const smartRouterHelper = {
-    address: '0xB825c66981438490F3B2C1FcA271897768fd86D7'
-  }
-  const smartRouter = {
-    address: '0x07398a23ac6634b24339Dca4C417Ba74FB6406cc'
-  }
+  // const smartRouterHelper = {
+  //   address: '0xB825c66981438490F3B2C1FcA271897768fd86D7'
+  // }
+  // const smartRouter = {
+  //   address: '0x07398a23ac6634b24339Dca4C417Ba74FB6406cc'
+  // }
   // const mixedRouteQuoterV1 = {
   //   address: '0xdBC860887233C9C9A841D62aa88A5f699B16a277'
   // }
@@ -35,28 +35,28 @@ async function main() {
 
   /** SmartRouterHelper */
   // console.log('Deploying SmartRouterHelper...')
-  // const SmartRouterHelper = await ethers.getContractFactory('SmartRouterHelper')
-  // const smartRouterHelper = await SmartRouterHelper.deploy()
-  // console.log('SmartRouterHelper deployed to:', smartRouterHelper.address)
-  // // // await tryVerify(smartRouterHelper)
+  const SmartRouterHelper = await ethers.getContractFactory('SmartRouterHelper')
+  const smartRouterHelper = await SmartRouterHelper.deploy()
+  console.log('SmartRouterHelper deployed to:', smartRouterHelper.address)
+  // // await tryVerify(smartRouterHelper)
 
-  // /** SmartRouter */
-  // console.log('Deploying SmartRouter...')
-  // const SmartRouter = await ethers.getContractFactory('SmartRouter', {
-  //   libraries: {
-  //     SmartRouterHelper: smartRouterHelper.address,
-  //   },
-  // })
-  // const smartRouter = await SmartRouter.deploy(
-  //   config.v2Factory,
-  //   eldenV3PoolDeployer_address,
-  //   eldenV3Factory_address,
-  //   positionManager_address,
-  //   stableSwapDeployedContracts.EldenStableSwapFactory,
-  //   stableSwapDeployedContracts.EldenStableSwapTwoPoolInfo,
-  //   config.WNATIVE
-  // )
-  // console.log('SmartRouter deployed to:', smartRouter.address)
+  /** SmartRouter */
+  console.log('Deploying SmartRouter...')
+  const SmartRouter = await ethers.getContractFactory('SmartRouter', {
+    libraries: {
+      SmartRouterHelper: smartRouterHelper.address,
+    },
+  })
+  const smartRouter = await SmartRouter.deploy(
+    config.v2Factory,
+    eldenV3PoolDeployer_address,
+    eldenV3Factory_address,
+    positionManager_address,
+    stableSwapDeployedContracts.EldenStableSwapFactory,
+    stableSwapDeployedContracts.EldenStableSwapTwoPoolInfo,
+    config.WNATIVE
+  )
+  console.log('SmartRouter deployed to:', smartRouter.address)
 
   // await tryVerify(smartRouter, [
   //   config.v2Factory,
