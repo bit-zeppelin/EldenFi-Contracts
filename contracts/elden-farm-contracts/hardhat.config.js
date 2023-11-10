@@ -291,6 +291,8 @@ module.exports = {
       butaneTestnet: process.env.BUTANE_API_KEY,
       butane: process.env.BUTANE_API_KEY,
       scrollSepolia: process.env.SCROLL_TEST_API_KEY,
+      base: process.env.BASE_GOERLI_API_KEY,
+      baseGoerli: process.env.BASE_GOERLI_API_KEY,
     },
     customChains: [
       {
@@ -327,10 +329,10 @@ module.exports = {
       },
       {
         network: 'base',
-        chainId: 84531,
+        chainId: 8453,
         urls: {
           apiURL: 'https://api.basescan.org/api',
-          browserURL: 'https://goerli.basescan.org/',
+          browserURL: 'https://basescan.org/',
         },
       },
       {

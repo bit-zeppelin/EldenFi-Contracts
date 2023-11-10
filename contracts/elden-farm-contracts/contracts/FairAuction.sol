@@ -950,17 +950,18 @@ contract FairAuction is Ownable, ReentrancyGuard {
 
   bool public forceClaimable; // safety measure to ensure that we can force claimable to true in case awaited LP token address plan change during the sale
 
-  address public weth = 0x06c2e7C81798a00eCc4892829884A3797C06116B;
+  address public weth;
 
 
   constructor(
-    IERC20 projectToken, IERC20 projectToken2, IERC20 saleToken,
+    address _weth, IERC20 projectToken, IERC20 projectToken2, IERC20 saleToken,
     uint256 startTime, uint256 endTime, address treasury_,
     uint256 maxToDistribute, uint256 maxToDistribute2, uint256 minToRaise, uint256 maxToRaise, uint256 capPerWallet
   ) Ownable(msg.sender) ReentrancyGuard() {
     require(startTime < endTime, "invalid dates");
     require(treasury_ != address(0), "invalid treasury");
 
+    weth = _weth;
     PROJECT_TOKEN = projectToken;
     PROJECT_TOKEN_2 = projectToken2;
     SALE_TOKEN = saleToken;
